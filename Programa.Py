@@ -80,6 +80,25 @@ def Menu():
                     return "Quinto Primaria"
                 elif opcionGrado == 6:
                     return "Sexto Primaria"
+            
+            elif OpcionNivel == 2:
+                opcionGrado = input()
+                if opcionGrado == 1:
+                    return "Primero Basico"
+                elif opcionGrado == 2:
+                    return "Segundo Basico"
+                elif opcionGrado == 3:
+                    return "Tercero Basico"
+                
+            elif OpcionNivel == 3:
+                opcionGrado = input()
+                if opcionGrado == 1:
+                    return "Primer grado de nivel Diversificado"
+                elif opcionGrado == 2:
+                    return "Segundo grado de nivel Diversificado"
+                elif opcionGrado == 3:
+                    return "Tercer grado de nivel Diversificado"
+
 
         Nombre = input("Ingrese nombre estuduiante")
         Codigo = random.randint(1000000, 9999999)
