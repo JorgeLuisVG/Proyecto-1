@@ -37,5 +37,10 @@ grad = input("Ingrese el grado del estudiante")
 
 nuevoEst = Estudiante(est, rnd, grad)
 
+prof = input("Ingrese nombre estuduiante")
+rnd2 = random.randint(1000000, 9999999)
+conoc = input("Ingrese el area de especialidad del profesor")
+
+NuevoProf = Profesor(prof, rnd, conoc)
 
 Clase = { "Curso": {"Tipo" : "Usuario"}}
