@@ -146,5 +146,3 @@ def Menu():
 
 ListaProfesores = []
 ListaEstudiantes = []
-
-Clase = { "Curso": {"Tipo" : "Usuario"}}
