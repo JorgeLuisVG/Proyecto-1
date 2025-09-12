@@ -39,6 +39,87 @@ class Curso:
 
 
 def Menu():
+    def DefinirGrado():
+        def DefinirNivGrad():
+            print("Ingrese el grado")
+            print("1 = Primero")
+            print("2 = segundo")
+            print("3 = Tercero")
+        print("Ingrese el nivel Academico")
+        print("1 = Primaria")
+        print("2 = Basico")
+        print("3 = Diversificado")
+        OpcionNivel = input()
+
+        DefinirNivGrad()
+        if OpcionNivel == 1:
+            print("4 = Cuarto")
+            print("5 = Quinto")
+            print("6 = Sexto")
+            opcionGrado = input()
+
+            if opcionGrado == 1:
+                return "Primero Primaria"
+            elif opcionGrado == 2:
+                return "Segundo Primaria"
+            elif opcionGrado == 3:
+                return "Tercero Primaria"
+            elif opcionGrado == 4:
+                return "Cuarto Primaria"
+            elif opcionGrado == 5:
+                return "Quinto Primaria"
+            elif opcionGrado == 6:
+                return "Sexto Primaria"
+        elif OpcionNivel == 2:
+            opcionGrado = input()
+            if opcionGrado == 1:
+                return "Primero Basico"
+            elif opcionGrado == 2:
+                return "Segundo Basico"
+            elif opcionGrado == 3:
+                return "Tercero Basico"
+        elif OpcionNivel == 3:
+            opcionGrado = input()
+            if opcionGrado == 1:
+                return "Primer grado de nivel Diversificado"
+            elif opcionGrado == 2:
+                return "Segundo grado de nivel Diversificado"
+            elif opcionGrado == 3:
+                return "Tercer grado de nivel Diversificado"
+
+    def Especialidades():
+        def Lengua():
+            print("Seleccione la Lengua:")
+            print("1 = Español")
+            print("2 = Kiche")
+            print("3 = Ingles")
+            print("4 = Aleman")
+            OpcionLengua = input()
+            if OpcionLengua == 1:
+                return "Lenguaje Español"
+            elif OpcionLengua == 2:
+                return "Lenguaje Kiche"
+            elif OpcionLengua == 3:
+                return "Lenguaje Ingles"
+            elif OpcionLengua == 4:
+                return "Lenguaje Aleman"
+
+        print("Ingrese la especialidad del catedratico")
+        print("1 = Matematicas")
+        print("2 = Programacion")
+        print("3 = Ciencias")
+        print("4 = Leguajes")
+        print("5 = Filosofía")
+        print("6 = Actividad Fisica")
+        Especialidad = {
+            "1" : "Matematicas",
+            "2" : "Programacion",
+            "3" : "Ciencias",
+            "4" : Lengua,
+            "5" : "Filosofía",
+            "6" : "Actividad Fisica"
+        }
+
     print("Menu")
     print("1 = Ingresar profesor")
     print("2 = Ingresar Alumno")
@@ -47,64 +128,18 @@ def Menu():
     opcion = input("Seleccione una opcion")
 
     if opcion == 1: 
-        print()
+        prof = input("Ingrese el nombre del profesor")
+        rnd2 = random.randint(1000000, 9999999)
+        conoc = input("Ingrese el area de especialidad del profesor")
+
+        NuevoProf = Profesor(prof, rnd2, conoc)
+        NuevoProf.MostrarInformacion()
     elif opcion == 2:
-        def DefinirGrado():
-            def DefinirNivGrad():
-                print("Ingrese el grado")
-                print("1 = Primero")
-                print("2 = segundo")
-                print("3 = Tercero")
-            print("Ingrese el nivel Academico")
-            print("1 = Primaria")
-            print("2 = Basico")
-            print("3 = Diversificado")
-            OpcionNivel = input()
-
-            DefinirNivGrad()
-            if OpcionNivel == 1:
-                print("4 = Cuarto")
-                print("5 = Quinto")
-                print("6 = Sexto")
-                opcionGrado = input()
-
-                if opcionGrado == 1:
-                    return "Primero Primaria"
-                elif opcionGrado == 2:
-                    return "Segundo Primaria"
-                elif opcionGrado == 3:
-                    return "Tercero Primaria"
-                elif opcionGrado == 4:
-                    return "Cuarto Primaria"
-                elif opcionGrado == 5:
-                    return "Quinto Primaria"
-                elif opcionGrado == 6:
-                    return "Sexto Primaria"
-            
-            elif OpcionNivel == 2:
-                opcionGrado = input()
-                if opcionGrado == 1:
-                    return "Primero Basico"
-                elif opcionGrado == 2:
-                    return "Segundo Basico"
-                elif opcionGrado == 3:
-                    return "Tercero Basico"
-                
-            elif OpcionNivel == 3:
-                opcionGrado = input()
-                if opcionGrado == 1:
-                    return "Primer grado de nivel Diversificado"
-                elif opcionGrado == 2:
-                    return "Segundo grado de nivel Diversificado"
-                elif opcionGrado == 3:
-                    return "Tercer grado de nivel Diversificado"
-
-
-        Nombre = input("Ingrese nombre estuduiante")
+        Nombre = input("Ingrese el nombre del estudiante")
         Codigo = random.randint(1000000, 9999999)
-        Grado = input("Ingrese el grado del estudiante")
+        Grado = DefinirGrado()
 
-        nuevoEst = Estudiante(est, rnd, grad)
+        nuevoEst = Estudiante(Nombre, Codigo, Grado)
         nuevoEst.MostrarInformacion()
     elif opcion == 3:
         print()
@@ -113,21 +148,5 @@ def Menu():
 
 ListaProfesores = []
 ListaEstudiantes = []
-
-# MENU
-est = input("Ingrese nombre estuduiante")
-import random
-rnd = random.randint(1000000, 9999999)
-grad = input("Ingrese el grado del estudiante")
-
-nuevoEst = Estudiante(est, rnd, grad)
-nuevoEst.MostrarInformacion()
-
-prof = input("Ingrese nombre estuduiante")
-rnd2 = random.randint(1000000, 9999999)
-conoc = input("Ingrese el area de especialidad del profesor")
-
-NuevoProf = Profesor(prof, rnd, conoc)
-NuevoProf.MostrarInformacion()
 
 Clase = { "Curso": {"Tipo" : "Usuario"}}
