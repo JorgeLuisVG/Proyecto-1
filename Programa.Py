@@ -104,13 +104,6 @@ def Menu():
             elif OpcionLengua == 4:
                 return "Lenguaje Aleman"
 
-        print("Ingrese la especialidad del catedratico")
-        print("1 = Matematicas")
-        print("2 = Programacion")
-        print("3 = Ciencias")
-        print("4 = Leguajes")
-        print("5 = Filosofía")
-        print("6 = Actividad Fisica")
         Especialidad = {
             "1" : "Matematicas",
             "2" : "Programacion",
@@ -119,6 +112,11 @@ def Menu():
             "5" : "Filosofía",
             "6" : "Actividad Fisica"
         }
+        for i, j  in Especialidad.items():
+            if i == "4":
+                print(f"numero: {i}, Especialidad: Lengua")
+            else:
+                print(f"numero: {i}, Especialidad: {j}")
 
     print("Menu")
     print("1 = Ingresar profesor")
