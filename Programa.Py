@@ -117,6 +117,15 @@ def Menu():
                 print(f"numero: {i}, Especialidad: Lengua")
             else:
                 print(f"numero: {i}, Especialidad: {j}")
+        OpcionEspecialidad = input("Ingrese una opcion")
+
+        if OpcionEspecialidad == "4":
+            Especialidad["4"]()
+        else:
+            try:
+                return Especialidad[OpcionEspecialidad]
+            except KeyError:
+                print("Ingrese una opcion correcta")
 
     print("Menu")
     print("1 = Ingresar profesor")
