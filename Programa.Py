@@ -94,7 +94,12 @@ def Menu():
             print("2 = Kiche")
             print("3 = Ingles")
             print("4 = Aleman")
-            OpcionLengua = input()
+            while True:
+                try:
+                    OpcionLengua = int(input())
+                except ValueError:
+                    print("ingrese una opcion valida")
+                else: break
             if OpcionLengua == 1:
                 return "Lenguaje Español"
             elif OpcionLengua == 2:
@@ -103,7 +108,6 @@ def Menu():
                 return "Lenguaje Ingles"
             elif OpcionLengua == 4:
                 return "Lenguaje Aleman"
-
         Especialidad = {
             "1" : "Matematicas",
             "2" : "Programacion",
@@ -117,10 +121,17 @@ def Menu():
                 print(f"numero: {i}, Especialidad: Lengua")
             else:
                 print(f"numero: {i}, Especialidad: {j}")
-        OpcionEspecialidad = input("Ingrese una opcion")
-
+        while True:
+            try:
+                OpcionEspecialidad = int(input("Ingrese una opcion"))
+            except ValueError:
+                print("Ingrese una opcion valida")
+            else: break
+        OpcionEspecialidad= str(OpcionEspecialidad)
+        
         if OpcionEspecialidad == "4":
-            Especialidad["4"]()
+            n = Especialidad["4"]()
+            return n
         else:
             try:
                 return Especialidad[OpcionEspecialidad]
@@ -137,7 +148,8 @@ def Menu():
     if opcion == 1: 
         prof = input("Ingrese el nombre del profesor")
         rnd2 = random.randint(1000000, 9999999)
-        conoc = input("Ingrese el area de especialidad del profesor")
+        print("Ingrese la especialidad del profesor")
+        conoc = Especialidades()
 
         NuevoProf = Profesor(prof, rnd2, conoc)
         NuevoProf.MostrarInformacion()
