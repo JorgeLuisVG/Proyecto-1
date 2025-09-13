@@ -3,14 +3,18 @@ class Usuario:
     def __init__(self, Nombre, Codigo):
         self.Nombre = Nombre
         self.Codigo = Codigo
+        self.cursos = []
     
     def MostrarInformacion(self):
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
+        for i in self.cursos:
+            print(i)
         
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Grado):
         super().__init__(Nombre, Codigo)
         self.Grado = Grado
+
     
     def MostrarInformacion(self):
         super().MostrarInformacion()
@@ -26,17 +30,13 @@ class Profesor(Usuario):
         print(f"Especialidad: {self.Especialidad}")
 
 class Curso:
-    def __init__(self, Nombre, Profesor, Estudiantes):
+    def __init__(self, Nombre, Requerimientos):
         self.Nombre = Nombre
-        self.Profesor = Profesor
-        self.Estudiantes = Estudiantes
+        self.Profesor 
+        self.Requerimientos = Requerimientos
 
-    def SeleccionarProfesor(self, Lista):
-        self.Nombre
-        for i in Lista:
-            if i[self.Conocimientos] == self.Nombre:
-                self.Profesor == i[self.Nombre]
-
+ListaProfesores = []
+ListaEstudiantes = []
 
 def Menu():
     def DefinirGrado():
@@ -143,7 +143,12 @@ def Menu():
     print("2 = Ingresar Alumno")
     print("3 = Crear Curso")
     print("4 = Ingresar profesor")
-    opcion = int(input("Seleccione una opcion"))
+    while True:
+        try:
+            opcion = int(input("Seleccione una opcion"))
+        except ValueError: 
+            print("Ingrese una opcion valida")
+        else: break
 
     if opcion == 1: 
         NombreProfesor = input("Ingrese el nombre del profesor")
@@ -152,6 +157,7 @@ def Menu():
         EspecialidadProfesor = Especialidades()
 
         NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
+        ListaProfesores.append(NuevoProf)
         NuevoProf.MostrarInformacion()
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
@@ -159,6 +165,7 @@ def Menu():
         Grado = DefinirGrado()
 
         nuevoEst = Estudiante(Nombre, Codigo, Grado)
+        ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
     elif opcion == 3:
         print()
