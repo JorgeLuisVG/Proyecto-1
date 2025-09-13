@@ -143,15 +143,15 @@ def Menu():
     print("2 = Ingresar Alumno")
     print("3 = Crear Curso")
     print("4 = Ingresar profesor")
-    opcion = input("Seleccione una opcion")
+    opcion = int(input("Seleccione una opcion"))
 
     if opcion == 1: 
-        prof = input("Ingrese el nombre del profesor")
-        rnd2 = random.randint(1000000, 9999999)
+        NombreProfesor = input("Ingrese el nombre del profesor")
+        Codigo = random.randint(1000000, 9999999)
         print("Ingrese la especialidad del profesor")
-        conoc = Especialidades()
+        EspecialidadProfesor = Especialidades()
 
-        NuevoProf = Profesor(prof, rnd2, conoc)
+        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
         NuevoProf.MostrarInformacion()
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
@@ -164,6 +164,8 @@ def Menu():
         print()
     elif opcion == 4:
         print()
+
+Menu()
 
 ListaProfesores = []
 ListaEstudiantes = []
