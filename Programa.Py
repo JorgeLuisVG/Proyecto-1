@@ -35,6 +35,15 @@ class Curso:
         self.Profesor 
         self.Requerimientos = Requerimientos
 
+class Tareas:
+    def __init__(self, Nombre, explicacion, Valor):
+        self.Nombre = Nombre
+        self.Explicacion = explicacion
+        self.Valor = Valor
+        self.Punteo : float
+    def AsignarPunteo(self, nota):
+        self.Punteo = self.Valor * nota
+
 ListaProfesores = []
 ListaEstudiantes = []
 
