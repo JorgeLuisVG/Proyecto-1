@@ -24,16 +24,17 @@ class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Especialidad):
         super().__init__(Nombre, Codigo)
         self.Especialidad = Especialidad
+        self.curso = ""
     
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(f"Especialidad: {self.Especialidad}")
 
 class Curso:
-    def __init__(self, Nombre, Requerimientos):
+    def __init__(self, Nombre, Profesor):
         self.Nombre = Nombre
-        self.Profesor 
-        self.Requerimientos = Requerimientos
+        self.Profesor = Profesor
+
 
 class Tareas:
     def __init__(self, Nombre, explicacion, Valor):
@@ -148,10 +149,11 @@ def Menu():
                 print("Ingrese una opcion correcta")
 
     print("Menu")
-    print("1 = Ingresar profesor")
+    print("1 = Crear Curso")
     print("2 = Ingresar Alumno")
-    print("3 = Crear Curso")
+    print("3 = Ingresar profesor")
     print("4 = Ingresar profesor")
+    print("5 = Crear Tarea")
     while True:
         try:
             opcion = int(input("Seleccione una opcion"))
@@ -160,14 +162,33 @@ def Menu():
         else: break
 
     if opcion == 1: 
-        NombreProfesor = input("Ingrese el nombre del profesor")
-        Codigo = random.randint(1000000, 9999999)
-        print("Ingrese la especialidad del profesor")
-        EspecialidadProfesor = Especialidades()
+        NombreCurso = input("Ingrese el nombre del curso")
+        print("Los estudiantes se asignaran de manera automatica")
+        print("¿Desea asignar al profesor de manera automatica o manual?")
+        print("1 = Manual")
+        print("2 = Automatica")
+        elegirProfe = int(input())
+        if elegirProfe == 1:
+            print("Seleccione el profesor")
+            for i in ListaProfesores:
+                i.MostrarInformacion()
+                print()
+            eleccion = input("Ingrese el codigo del profesor que quiere elegir")
+        elif elegirProfe == 2:
+            print("Seleccione el requisito para el para el profesor del curso")
+            requisitos = Especialidades()
+            encontrado = None
+            for i in ListaProfesores:
+                if i.Especialidad == requisitos and i.curso == "":
+                    i.curso == NombreCurso
+                    profesor = i
+                    print("Se seleccionó al profesor")
+                    i.MostrarInformacion()
+                    encontrado = True
+                    break
+            if encontrado != True:
+                print("No hay profesores disponibles segun los requisitos")
 
-        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
-        ListaProfesores.append(NuevoProf)
-        NuevoProf.MostrarInformacion()
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
         Codigo = random.randint(1000000, 9999999)
@@ -177,9 +198,21 @@ def Menu():
         ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
     elif opcion == 3:
-        print()
+        NombreProfesor = input("Ingrese el nombre del profesor")
+        Codigo = random.randint(1000000, 9999999)
+        print("Ingrese la especialidad del profesor")
+        EspecialidadProfesor = Especialidades()
+
+        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
+        ListaProfesores.append(NuevoProf)
+        NuevoProf.MostrarInformacion()
     elif opcion == 4:
         print()
+    elif opcion == 5:
+        NombreTarea = input("Ingrese el titulo de la tarea")
+        ExplicacionTarea = input("Redacte una explicacion de la tarea")
+        ValorTarea = input("Ingrese el valor de la tarea")
+        NuevaTarea = Tareas(NombreTarea, ExplicacionTarea, ValorTarea)
 
 Menu()
 
