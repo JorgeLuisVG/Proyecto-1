@@ -45,7 +45,6 @@ class Curso:
                 elif j == self.Nombre:
                     self.Estudiantes.append(i)
                     i.cursos.append(self.Nombre)
-        print()
 class Tareas:
     def __init__(self, Nombre, explicacion, Valor):
         self.Nombre = Nombre
@@ -64,8 +63,6 @@ class Tareas:
 ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
-
-
 
 def Menu():
     def DefinirGrado():
@@ -216,6 +213,8 @@ def Menu():
         nuevoEst = Estudiante(Nombre, Codigo, Grado)
         ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
+
+        
     elif opcion == 3:
         NombreProfesor = input("Ingrese el nombre del profesor")
         Codigo = random.randint(1000000, 9999999)
