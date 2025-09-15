@@ -3,14 +3,18 @@ class Usuario:
     def __init__(self, Nombre, Codigo):
         self.Nombre = Nombre
         self.Codigo = Codigo
+        self.cursos = []
     
     def MostrarInformacion(self):
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
+        for i in self.cursos:
+            print(i)
         
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Grado):
         super().__init__(Nombre, Codigo)
         self.Grado = Grado
+
     
     def MostrarInformacion(self):
         super().MostrarInformacion()
@@ -20,23 +24,35 @@ class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Especialidad):
         super().__init__(Nombre, Codigo)
         self.Especialidad = Especialidad
+        self.curso = ""
     
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(f"Especialidad: {self.Especialidad}")
 
 class Curso:
-    def __init__(self, Nombre, Profesor, Estudiantes):
+    def __init__(self, Nombre, Profesor):
         self.Nombre = Nombre
         self.Profesor = Profesor
-        self.Estudiantes = Estudiantes
-
-    def SeleccionarProfesor(self, Lista):
-        self.Nombre
+        self.Estudiantes = []
+    def AñadirEstudiantes(self, Lista):
         for i in Lista:
-            if i[self.Conocimientos] == self.Nombre:
-                self.Profesor == i[self.Nombre]
+            for j in i.Cursos:
+                if j == self.Nombre:
+                    self.Estudiantes.append(i)
+                else: continue
+class Tareas:
+    def __init__(self, Nombre, explicacion, Valor):
+        self.Nombre = Nombre
+        self.Explicacion = explicacion
+        self.Valor = Valor
+        self.Punteo : float
+    def AsignarPunteo(self, nota):
+        self.Punteo = self.Valor * nota
 
+ListaProfesores = []
+ListaEstudiantes = []
+ListaCursos = []
 
 def Menu():
     def DefinirGrado():
@@ -139,33 +155,68 @@ def Menu():
                 print("Ingrese una opcion correcta")
 
     print("Menu")
-    print("1 = Ingresar profesor")
+    print("1 = Crear Curso")
     print("2 = Ingresar Alumno")
-    print("3 = Crear Curso")
+    print("3 = Ingresar profesor")
     print("4 = Ingresar profesor")
-    opcion = int(input("Seleccione una opcion"))
+    print("5 = Crear Tarea")
+    while True:
+        try:
+            opcion = int(input("Seleccione una opcion"))
+        except ValueError: 
+            print("Ingrese una opcion valida")
+        else: break
 
     if opcion == 1: 
-        NombreProfesor = input("Ingrese el nombre del profesor")
-        Codigo = random.randint(1000000, 9999999)
-        print("Ingrese la especialidad del profesor")
-        EspecialidadProfesor = Especialidades()
+        def ElegirProfesor(Lista):
+            for i in Lista:
+                i.MostrarIndormacion()
+                print()
+            eleccion = input("Escriba el código del profesor que desea incluír en este curso")
+            for i in Lista:
+                if i.Codigo == eleccion:
+                    return i
 
-        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
-        NuevoProf.MostrarInformacion()
+        NombreCurso = input("Ingrese el nombre del curso")
+        print("Los estudiantes se asignaran de manera automatica")
+        print("Seleccione el requisito para el para el profesor del curso")
+        requisitos = Especialidades()
+        encontrado = None
+        ListaProf2 = []
+        for i in ListaProfesores:
+            if i.Especialidad== requisitos:
+                ListaProf2.append(i)
+        if len(ListaProf2) == 0:
+            print("No se encontraron profesores que cumplan con el requisito elija uno entre la lista total")
+            Profe = ElegirProfesor(ListaProfesores)
+        elif len(ListaProf2) >= 1:
+            print("Estos son los profesores que cuentan con el requisito necesario para el curso")
+            Profe = ElegirProfesor(ListaProf2)
+        NuevoCurso = Curso(NombreCurso, Profe)
+        ListaCursos.append(NuevoCurso)
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
         Codigo = random.randint(1000000, 9999999)
         Grado = DefinirGrado()
 
         nuevoEst = Estudiante(Nombre, Codigo, Grado)
+        ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
     elif opcion == 3:
-        print()
+        NombreProfesor = input("Ingrese el nombre del profesor")
+        Codigo = random.randint(1000000, 9999999)
+        print("Ingrese la especialidad del profesor")
+        EspecialidadProfesor = Especialidades()
+
+        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
+        ListaProfesores.append(NuevoProf)
+        NuevoProf.MostrarInformacion()
     elif opcion == 4:
         print()
+    elif opcion == 5:
+        NombreTarea = input("Ingrese el titulo de la tarea")
+        ExplicacionTarea = input("Redacte una explicacion de la tarea")
+        ValorTarea = input("Ingrese el valor de la tarea")
+        NuevaTarea = Tareas(NombreTarea, ExplicacionTarea, ValorTarea)
 
 Menu()
-
-ListaProfesores = []
-ListaEstudiantes = []
