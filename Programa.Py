@@ -39,7 +39,7 @@ class Curso:
         for i in Lista:
             for j in i.Cursos:
                 if j == self.Nombre:
-                    self.Estudiantes.append()
+                    self.Estudiantes.append(i)
                 else: continue
 class Tareas:
     def __init__(self, Nombre, explicacion, Valor):
