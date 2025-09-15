@@ -9,17 +9,13 @@ class Usuario:
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
         for i in self.cursos:
             print(i)
-        
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Grado):
         super().__init__(Nombre, Codigo)
         self.Grado = Grado
-
-    
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(self.Grado)
-
 class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Especialidad):
         super().__init__(Nombre, Codigo)
@@ -37,22 +33,39 @@ class Curso:
         self.Estudiantes = []
     def AñadirEstudiantes(self, Lista):
         for i in Lista:
-            for j in i.Cursos:
+            for j in i.cursos:
                 if j == self.Nombre:
                     self.Estudiantes.append(i)
                 else: continue
+    def actualizarCursos(self, Lista):
+        for i in Lista:
+            for j in i.cursos:
+                if j == self.Nombre:
+                    pass
+                elif j == self.Nombre:
+                    self.Estudiantes.append(i)
+                    i.cursos.append(self.Nombre)
+        print()
 class Tareas:
     def __init__(self, Nombre, explicacion, Valor):
         self.Nombre = Nombre
         self.Explicacion = explicacion
         self.Valor = Valor
-        self.Punteo : float
+        self.Punteo = 0 
+        self.Contenido = ""
     def AsignarPunteo(self, nota):
         self.Punteo = self.Valor * nota
+    def CompletarTarea(self):
+        print("Cumpla las instrucciones de la tarea")
+        print(self.Explicacion)
+        archivo = input()
+        self.contenido = archivo
 
 ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
+
+
 
 def Menu():
     def DefinirGrado():
@@ -170,7 +183,7 @@ def Menu():
     if opcion == 1: 
         def ElegirProfesor(Lista):
             for i in Lista:
-                i.MostrarIndormacion()
+                i.MostrarInformacion()
                 print()
             eleccion = input("Escriba el código del profesor que desea incluír en este curso")
             for i in Lista:
@@ -193,6 +206,7 @@ def Menu():
             print("Estos son los profesores que cuentan con el requisito necesario para el curso")
             Profe = ElegirProfesor(ListaProf2)
         NuevoCurso = Curso(NombreCurso, Profe)
+        NuevoCurso.AñadirEstudiantes(ListaEstudiantes)
         ListaCursos.append(NuevoCurso)
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
