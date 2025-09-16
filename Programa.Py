@@ -1,27 +1,33 @@
 import random
 class Usuario:
-    def __init__(self, Nombre, Codigo):
+    def __init__(self, Nombre, Codigo, Pin):
         self.Nombre = Nombre
         self.Codigo = Codigo
         self.cursos = []
-    
+        self.__Pin = Pin
     def MostrarInformacion(self):
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
         for i in self.cursos:
             print(i)
+    def ValidarPin(self, ProbarPin):
+        if ProbarPin == self.__Pin:
+            return True
+        else: return False
+
 class Estudiante(Usuario):
-    def __init__(self, Nombre, Codigo, Grado):
+    def __init__(self, Nombre, Codigo):
         super().__init__(Nombre, Codigo)
-        self.Grado = Grado
+        self.ListaTareas = []
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(self.Grado)
+    def ValidarPin(self, ProbarPin):
+        super().ValidarPin(ProbarPin)
 class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Especialidad):
         super().__init__(Nombre, Codigo)
         self.Especialidad = Especialidad
         self.curso = ""
-    
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(f"Especialidad: {self.Especialidad}")
@@ -31,6 +37,7 @@ class Curso:
         self.Nombre = Nombre
         self.Profesor = Profesor
         self.Estudiantes = []
+        self.TareasCalificar = []
     def AñadirEstudiantes(self, Lista):
         for i in Lista:
             for j in i.cursos:
@@ -46,7 +53,8 @@ class Curso:
                     self.Estudiantes.append(i)
                     i.cursos.append(self.Nombre)
 class Tareas:
-    def __init__(self, Nombre, explicacion, Valor):
+    def __init__(self, CursoA, Nombre, explicacion, Valor):
+        self.CursoA = CursoA
         self.Nombre = Nombre
         self.Explicacion = explicacion
         self.Valor = Valor
@@ -64,55 +72,14 @@ ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
 
+def IniciarSesion():
+    IniciarNombre = input("Ingrese su Nombre Completo")
+    IniciarContraseña = input("Ingrese su pin")
+
+
+
+
 def Menu():
-    def DefinirGrado():
-        def DefinirNivGrad():
-            print("Ingrese el grado")
-            print("1 = Primero")
-            print("2 = segundo")
-            print("3 = Tercero")
-        print("Ingrese el nivel Academico")
-        print("1 = Primaria")
-        print("2 = Basico")
-        print("3 = Diversificado")
-        OpcionNivel = input()
-
-        DefinirNivGrad()
-        if OpcionNivel == 1:
-            print("4 = Cuarto")
-            print("5 = Quinto")
-            print("6 = Sexto")
-            opcionGrado = input()
-
-            if opcionGrado == 1:
-                return "Primero Primaria"
-            elif opcionGrado == 2:
-                return "Segundo Primaria"
-            elif opcionGrado == 3:
-                return "Tercero Primaria"
-            elif opcionGrado == 4:
-                return "Cuarto Primaria"
-            elif opcionGrado == 5:
-                return "Quinto Primaria"
-            elif opcionGrado == 6:
-                return "Sexto Primaria"
-        elif OpcionNivel == 2:
-            opcionGrado = input()
-            if opcionGrado == 1:
-                return "Primero Basico"
-            elif opcionGrado == 2:
-                return "Segundo Basico"
-            elif opcionGrado == 3:
-                return "Tercero Basico"
-        elif OpcionNivel == 3:
-            opcionGrado = input()
-            if opcionGrado == 1:
-                return "Primer grado de nivel Diversificado"
-            elif opcionGrado == 2:
-                return "Segundo grado de nivel Diversificado"
-            elif opcionGrado == 3:
-                return "Tercer grado de nivel Diversificado"
-
     def Especialidades():
         def Lengua():
             print("Seleccione la Lengua:")
@@ -164,11 +131,19 @@ def Menu():
             except KeyError:
                 print("Ingrese una opcion correcta")
 
+    def CrearPin():
+        Pin = input("Cree su pin de 4 dijitos")
+        while True:
+            if len(Pin) == 4:
+                print("Pin valido")
+                break
+            else: print("Pin invalido")
+        return Pin
+    
     print("Menu")
     print("1 = Crear Curso")
     print("2 = Ingresar Alumno")
     print("3 = Ingresar profesor")
-    print("4 = Ingresar profesor")
     print("5 = Crear Tarea")
     while True:
         try:
@@ -208,12 +183,10 @@ def Menu():
     elif opcion == 2:
         Nombre = input("Ingrese el nombre del estudiante")
         Codigo = random.randint(1000000, 9999999)
-        Grado = DefinirGrado()
 
-        nuevoEst = Estudiante(Nombre, Codigo, Grado)
+        nuevoEst = Estudiante(Nombre, Codigo)
         ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
-
         
     elif opcion == 3:
         NombreProfesor = input("Ingrese el nombre del profesor")
@@ -225,8 +198,7 @@ def Menu():
         ListaProfesores.append(NuevoProf)
         NuevoProf.MostrarInformacion()
     elif opcion == 4:
-        print()
-    elif opcion == 5:
+        NombreCursoTarea = input("seleccione el curso a asignar la tarea")
         NombreTarea = input("Ingrese el titulo de la tarea")
         ExplicacionTarea = input("Redacte una explicacion de la tarea")
         ValorTarea = input("Ingrese el valor de la tarea")
