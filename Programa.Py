@@ -76,6 +76,7 @@ ListaCursos = []
 
 def IniciarSesion(lista):
     Validez = False
+    usuario = None
     while True:
         IniciarNombre = input("Ingrese su Nombre")
         while True:
@@ -85,6 +86,7 @@ def IniciarSesion(lista):
                         IniciarContraseña = input("Ingrese su pin")
                         if IniciarContraseña == i.Pin:
                             Validez = True
+                            usuario = i
                             break
                         elif IniciarContraseña != i.Pin:
                             print("Pin incorrecto")
@@ -94,7 +96,7 @@ def IniciarSesion(lista):
         if Validez == True: 
             print("Inicio de sesion Exitoso")
             break
-    return Validez
+    return usuario
 
 def Menu():
     def Especialidades():
@@ -219,5 +221,19 @@ def Menu():
         ExplicacionTarea = input("Redacte una explicacion de la tarea")
         ValorTarea = input("Ingrese el valor de la tarea")
         NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
+    elif opcion == 5:
+        print("Inicie sesion")
+        UsuarioIniciado = IniciarSesion(ListaProfesores)
+        while True:
+            print("Seleccione la accion que desea realizar")
+            print("1 = Calificar Tareas")
+            print("2 = Ver informes")
+    elif opcion == 6:
+        print("Inicie sesion")
+        UsuarioIniciado = IniciarSesion(ListaEstudiantes)
+        while True:
+            print("Seleccione la accion que desea realizar")
+            print("1 = Realizar Tareas")
+            print("2 = Inscribirse a un nuevo curso")
 
 Menu()
