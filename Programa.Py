@@ -15,19 +15,17 @@ class Usuario:
         else: return False
 
 class Estudiante(Usuario):
-    def __init__(self, Nombre, Codigo):
-        super().__init__(Nombre, Codigo)
+    def __init__(self, Nombre, Codigo, Pin):
+        super().__init__(Nombre, Codigo, Pin)
         self.ListaTareas = []
     def MostrarInformacion(self):
         super().MostrarInformacion()
-        print(self.Grado)
     def ValidarPin(self, ProbarPin):
         super().ValidarPin(ProbarPin)
 class Profesor(Usuario):
-    def __init__(self, Nombre, Codigo, Especialidad):
-        super().__init__(Nombre, Codigo)
+    def __init__(self, Nombre, Codigo, Pin, Especialidad):
+        super().__init__(Nombre, Codigo, Pin)
         self.Especialidad = Especialidad
-        self.curso = ""
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(f"Especialidad: {self.Especialidad}")
@@ -38,19 +36,13 @@ class Curso:
         self.Profesor = Profesor
         self.Estudiantes = []
         self.TareasCalificar = []
-    def AñadirEstudiantes(self, Lista):
-        for i in Lista:
-            for j in i.cursos:
-                if j == self.Nombre:
-                    self.Estudiantes.append(i)
-                else: continue
     def actualizarCursos(self, Lista):
         for i in Lista:
             for j in i.cursos:
                 if j == self.Nombre:
                     pass
                 elif j == self.Nombre:
-                    self.Estudiantes.append(i)
+                    self.Estudiantes.append(i.Nombre)
                     i.cursos.append(self.Nombre)
 class Tareas:
     def __init__(self, CursoA, Nombre, explicacion, Valor):
@@ -67,6 +59,14 @@ class Tareas:
         print(self.Explicacion)
         archivo = input()
         self.contenido = archivo
+    def VerTarea(self):
+        print(f"Curso: {self.CursoA}")
+        print(f"Tarea: {self.Nombre}, Valor: {self.Valor}")
+        print(f"Explicacion: {self.Explicacion}")
+        print(f"Entrega: {self.Contenido}")
+        if self.Punteo == 0:
+            print("Tarea Por Calificar")
+            self.AsignarPunteo()
 
 ListaProfesores = []
 ListaEstudiantes = []
@@ -76,31 +76,24 @@ def IniciarSesion():
     IniciarNombre = input("Ingrese su Nombre Completo")
     IniciarContraseña = input("Ingrese su pin")
 
-
-
-
 def Menu():
     def Especialidades():
         def Lengua():
-            print("Seleccione la Lengua:")
+            print("Seleccione la Lengua")
             print("1 = Español")
             print("2 = Kiche")
             print("3 = Ingles")
             print("4 = Aleman")
             while True:
                 try:
-                    OpcionLengua = int(input())
+                    OpcionLengua = int(input().strip())
                 except ValueError:
                     print("ingrese una opcion valida")
                 else: break
-            if OpcionLengua == 1:
-                return "Lenguaje Español"
-            elif OpcionLengua == 2:
-                return "Lenguaje Kiche"
-            elif OpcionLengua == 3:
-                return "Lenguaje Ingles"
-            elif OpcionLengua == 4:
-                return "Lenguaje Aleman"
+            if OpcionLengua == 1: return "Lenguaje Español"
+            elif OpcionLengua == 2: return "Lenguaje Kiche"
+            elif OpcionLengua == 3: return "Lenguaje Ingles"
+            elif OpcionLengua == 4: return "Lenguaje Aleman"
         Especialidad = {
             "1" : "Matematicas",
             "2" : "Programacion",
@@ -116,7 +109,7 @@ def Menu():
                 print(f"numero: {i}, Especialidad: {j}")
         while True:
             try:
-                OpcionEspecialidad = int(input("Ingrese una opcion"))
+                OpcionEspecialidad = int(input("Ingrese una opcion").strip())
             except ValueError:
                 print("Ingrese una opcion valida")
             else: break
@@ -132,7 +125,7 @@ def Menu():
                 print("Ingrese una opcion correcta")
 
     def CrearPin():
-        Pin = input("Cree su pin de 4 dijitos")
+        Pin = int(input("Cree su pin de 4 dijitos").strip())
         while True:
             if len(Pin) == 4:
                 print("Pin valido")
@@ -147,7 +140,7 @@ def Menu():
     print("5 = Crear Tarea")
     while True:
         try:
-            opcion = int(input("Seleccione una opcion"))
+            opcion = int(input("Seleccione una opcion")).strip()
         except ValueError: 
             print("Ingrese una opcion valida")
         else: break
@@ -157,12 +150,12 @@ def Menu():
             for i in Lista:
                 i.MostrarInformacion()
                 print()
-            eleccion = input("Escriba el código del profesor que desea incluír en este curso")
+            eleccion = input("Escriba el código del profesor que desea incluír en este curso").strip()
             for i in Lista:
                 if i.Codigo == eleccion:
                     return i
 
-        NombreCurso = input("Ingrese el nombre del curso")
+        NombreCurso = input("Ingrese el nombre del curso").strip().title()
         print("Los estudiantes se asignaran de manera automatica")
         print("Seleccione el requisito para el para el profesor del curso")
         requisitos = Especialidades()
@@ -178,19 +171,21 @@ def Menu():
             print("Estos son los profesores que cuentan con el requisito necesario para el curso")
             Profe = ElegirProfesor(ListaProf2)
         NuevoCurso = Curso(NombreCurso, Profe)
-        NuevoCurso.AñadirEstudiantes(ListaEstudiantes)
-        ListaCursos.append(NuevoCurso)
+        NuevoCurso.actualizarCursos(ListaEstudiantes)
+        ListaCursos.append(NuevoCurso)    
     elif opcion == 2:
-        Nombre = input("Ingrese el nombre del estudiante")
+        Nombre = input("Ingrese el nombre del estudiante").strip().title()
         Codigo = random.randint(1000000, 9999999)
+        PinEstudiante = CrearPin()
 
-        nuevoEst = Estudiante(Nombre, Codigo)
+        nuevoEst = Estudiante(Nombre, Codigo, PinEstudiante)
         ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
         
     elif opcion == 3:
-        NombreProfesor = input("Ingrese el nombre del profesor")
+        NombreProfesor = input("Ingrese el nombre del profesor").strip().title()
         Codigo = random.randint(1000000, 9999999)
+
         print("Ingrese la especialidad del profesor")
         EspecialidadProfesor = Especialidades()
 
