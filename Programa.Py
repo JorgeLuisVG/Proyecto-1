@@ -3,7 +3,7 @@ class Usuario:
     def __init__(self, Nombre, Codigo, Pin):
         self.Nombre = Nombre
         self.Codigo = Codigo
-        self.cursos = []
+        self.cursos = [] # [[curso, punteo, [tareas]]]
         self.__Pin = Pin
     def MostrarInformacion(self):
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
@@ -36,16 +36,16 @@ class Curso:
     def __init__(self, Nombre, Profesor):
         self.Nombre = Nombre
         self.Profesor = Profesor
-        self.Estudiantes = []
-        self.TareasCalificar = []
+        self.Estudiantes = [] # [[Nombre del estudiante, Punteo, [Tareas]]
+        self.Tareas = []
     def actualizarCursos(self, Lista):
         for i in Lista:
             for j in i.cursos:
                 if j == self.Nombre:
                     pass
-                elif j == self.Nombre:
-                    self.Estudiantes.append(i.Nombre)
-                    i.cursos.append(self.Nombre)
+                elif j not in self.Nombre:
+                    self.Estudiantes.append([i.Nombre, 0, [0]])
+                    i.cursos.append([self.Nombre, 0, [0]])
 class Tareas:
     def __init__(self, CursoA, Nombre, explicacion, Valor):
         self.CursoA = CursoA
@@ -53,14 +53,14 @@ class Tareas:
         self.Explicacion = explicacion
         self.Valor = Valor
         self.Punteo = 0 
-        self.Contenido = ""
+        self.Contenido = None
     def AsignarPunteo(self, nota):
         self.Punteo = self.Valor * nota
     def CompletarTarea(self):
         print("Cumpla las instrucciones de la tarea")
         print(self.Explicacion)
         archivo = input()
-        self.contenido = archivo
+        self.Contenido = archivo
     def VerTarea(self):
         print(f"Curso: {self.CursoA}")
         print(f"Tarea: {self.Nombre}, Valor: {self.Valor}")
@@ -68,7 +68,15 @@ class Tareas:
         print(f"Entrega: {self.Contenido}")
         if self.Punteo == 0:
             print("Tarea Por Calificar")
-            self.AsignarPunteo()
+            while True:
+                try:
+                    calificacion = float(input("Ingrese la calificacion para la tarea").strip())
+                except ValueError:
+                    print("Ingrese un valor valido")
+                else: break
+            self.AsignarPunteo(calificacion)
+        else: pass
+        print(f"Punteo: {self.Punteo}")
 
 ListaProfesores = []
 ListaEstudiantes = []
@@ -78,17 +86,17 @@ def IniciarSesion(lista):
     Validez = False
     usuario = None
     while True:
-        IniciarNombre = input("Ingrese su Nombre")
+        IniciarNombre = input("Ingrese su Nombre").strip().title()
         while True:
             for i in lista:
                 if i.Nombre == IniciarNombre:
                     while True:
-                        IniciarContraseña = input("Ingrese su pin")
-                        if IniciarContraseña == i.Pin:
-                            Validez = True
+                        IniciarContraseña = input("Ingrese su pin").strip()
+                        Validez = i.ValidarPin(IniciarContraseña)
+                        if Validez == True:
                             usuario = i
                             break
-                        elif IniciarContraseña != i.Pin:
+                        else:
                             print("Pin incorrecto")
             if Validez == False: 
                 print("No se encontró al usuario intentelo nuevamente")
@@ -216,11 +224,21 @@ def Menu():
         ListaProfesores.append(NuevoProf)
         NuevoProf.MostrarInformacion()
     elif opcion == 4:
-        NombreCursoTarea = input("seleccione el curso a asignar la tarea")
-        NombreTarea = input("Ingrese el titulo de la tarea")
-        ExplicacionTarea = input("Redacte una explicacion de la tarea")
-        ValorTarea = input("Ingrese el valor de la tarea")
+        NombreCursoTarea = input("seleccione el curso a asignar la tarea").strip().title()
+        NombreTarea = input("Ingrese el titulo de la tarea").strip().title()
+        ExplicacionTarea = input("Redacte una explicacion de la tarea").strip()
+        ValorTarea = input("Ingrese el valor de la tarea").strip()
         NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
+
+        for curso in ListaCursos:
+            if curso.Nombre == NombreCursoTarea:
+                curso.Tareas.append(NuevaTarea)
+                for i in ListaEstudiantes:
+                    for curs in i.cursos:
+                        if curso.Nombre == curs:
+                            i.ListaTareas.append(NuevaTarea)
+                        else: pass
+                break
     elif opcion == 5:
         print("Inicie sesion")
         UsuarioIniciado = IniciarSesion(ListaProfesores)
