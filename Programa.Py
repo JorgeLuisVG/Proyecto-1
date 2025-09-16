@@ -3,7 +3,7 @@ class Usuario:
     def __init__(self, Nombre, Codigo, Pin):
         self.Nombre = Nombre
         self.Codigo = Codigo
-        self.cursos = [] # [[curso, punteo, [tareas]]]
+        self.cursos = []
         self.__Pin = Pin
     def MostrarInformacion(self):
         print(f"Nombre: {self.Nombre}, Codigo: {self.Codigo}")
@@ -13,7 +13,6 @@ class Usuario:
         if ProbarPin == self.__Pin:
             return True
         else: return False
-
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Pin):
         super().__init__(Nombre, Codigo, Pin)
@@ -52,7 +51,7 @@ class Tareas:
         self.Nombre = Nombre
         self.Explicacion = explicacion
         self.Valor = Valor
-        self.Punteo = 0 
+        self.Punteo = None 
         self.Contenido = None
     def AsignarPunteo(self, nota):
         self.Punteo = self.Valor * nota
@@ -66,16 +65,6 @@ class Tareas:
         print(f"Tarea: {self.Nombre}, Valor: {self.Valor}")
         print(f"Explicacion: {self.Explicacion}")
         print(f"Entrega: {self.Contenido}")
-        if self.Punteo == 0:
-            print("Tarea Por Calificar")
-            while True:
-                try:
-                    calificacion = float(input("Ingrese la calificacion para la tarea").strip())
-                except ValueError:
-                    print("Ingrese un valor valido")
-                else: break
-            self.AsignarPunteo(calificacion)
-        else: pass
         print(f"Punteo: {self.Punteo}")
 
 ListaProfesores = []
@@ -246,6 +235,37 @@ def Menu():
             print("Seleccione la accion que desea realizar")
             print("1 = Calificar Tareas")
             print("2 = Ver informes")
+            while True:
+                try:
+                    accion = int(input().strip())
+                except ValueError:
+                    print("Ingrese una opcion valida")
+                else: break
+            if accion == 1:
+                for cursoUsuario in UsuarioIniciado.cursos:
+                    for curso in ListaCursos:
+                        if curso == cursoUsuario:
+                            print(f"Curso: {curso.Nombre}")
+                            for est in curso.Estudiantes:
+                             # est = [Nombre del estudiante, Punteo, [Tareas]]
+                                print(f"Estudiante: {est[0]}")
+                                for tarea in est[2]:
+                                    if tarea == 0: print("No hay tareas")
+                                    elif tarea.Punteo != 0:
+                                        tarea.VerTarea()
+                                        print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
+                                        while True: 
+                                            try: 
+                                                nota = int(input().strip())
+                                            except ValueError:
+                                                print("Ingrese una calificaion valida")
+                                            else: break
+                                        tarea.AsignarPunteo(nota)
+                                        est[1] += nota
+                                        
+
+            elif accion == 2:
+                print()
     elif opcion == 6:
         print("Inicie sesion")
         UsuarioIniciado = IniciarSesion(ListaEstudiantes)
@@ -253,5 +273,11 @@ def Menu():
             print("Seleccione la accion que desea realizar")
             print("1 = Realizar Tareas")
             print("2 = Inscribirse a un nuevo curso")
+            while True:
+                try:
+                    accion = int(input().strip())
+                except ValueError:
+                    print("Ingrese una opcion valida")
+                else: break
 
 Menu()
