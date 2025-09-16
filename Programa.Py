@@ -37,14 +37,12 @@ class Curso:
         self.Profesor = Profesor
         self.Estudiantes = [] # [[Nombre del estudiante, Punteo, [Tareas]]
         self.Tareas = []
-    def actualizarCursos(self, Lista):
-        for i in Lista:
-            for j in i.cursos:
-                if j == self.Nombre:
-                    pass
-                elif j not in self.Nombre:
-                    self.Estudiantes.append([i.Nombre, 0, [0]])
-                    i.cursos.append([self.Nombre, 0, [0]])
+    def actualizarCursos(self, lista):
+        for est in lista:
+            cursos_est = [c[0] for c in est.cursos]
+            if self.Nombre not in cursos_est:
+                self.Estudiantes.append([est.Nombre, 0, []])
+                est.cursos.append([self.Nombre, 0, []])
 class Tareas:
     def __init__(self, CursoA, Nombre, explicacion, Valor):
         self.CursoA = CursoA
@@ -216,7 +214,7 @@ def Menu():
         NombreCursoTarea = input("seleccione el curso a asignar la tarea").strip().title()
         NombreTarea = input("Ingrese el titulo de la tarea").strip().title()
         ExplicacionTarea = input("Redacte una explicacion de la tarea").strip()
-        ValorTarea = input("Ingrese el valor de la tarea").strip()
+        ValorTarea = float(input("Ingrese el valor de la tarea").strip())
         NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
         for curso in ListaCursos:
@@ -251,7 +249,7 @@ def Menu():
                                 print(f"Estudiante: {est[0]}")
                                 for tarea in est[2]:
                                     if tarea == 0: print("No hay tareas")
-                                    elif tarea.Punteo != 0:
+                                    elif tarea.Punteo is None:
                                         tarea.VerTarea()
                                         print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
                                         while True: 
@@ -262,8 +260,6 @@ def Menu():
                                             else: break
                                         tarea.AsignarPunteo(nota)
                                         est[1] += nota
-                                        
-
             elif accion == 2:
                 print()
     elif opcion == 6:
