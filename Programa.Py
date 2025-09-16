@@ -21,7 +21,7 @@ class Estudiante(Usuario):
     def MostrarInformacion(self):
         super().MostrarInformacion()
     def ValidarPin(self, ProbarPin):
-        super().ValidarPin(ProbarPin)
+        return super().ValidarPin(ProbarPin)
 class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Pin, Especialidad):
         super().__init__(Nombre, Codigo, Pin)
@@ -29,6 +29,8 @@ class Profesor(Usuario):
     def MostrarInformacion(self):
         super().MostrarInformacion()
         print(f"Especialidad: {self.Especialidad}")
+    def ValidarPin(self, ProbarPin):
+        return super().ValidarPin(ProbarPin)
 
 class Curso:
     def __init__(self, Nombre, Profesor):
@@ -72,9 +74,27 @@ ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
 
-def IniciarSesion():
-    IniciarNombre = input("Ingrese su Nombre Completo")
-    IniciarContraseña = input("Ingrese su pin")
+def IniciarSesion(lista):
+    Validez = False
+    while True:
+        IniciarNombre = input("Ingrese su Nombre")
+        while True:
+            for i in lista:
+                if i.Nombre == IniciarNombre:
+                    while True:
+                        IniciarContraseña = input("Ingrese su pin")
+                        if IniciarContraseña == i.Pin:
+                            Validez = True
+                            break
+                        elif IniciarContraseña != i.Pin:
+                            print("Pin incorrecto")
+            if Validez == False: 
+                print("No se encontró al usuario intentelo nuevamente")
+                break
+        if Validez == True: 
+            print("Inicio de sesion Exitoso")
+            break
+    return Validez
 
 def Menu():
     def Especialidades():
@@ -125,7 +145,7 @@ def Menu():
                 print("Ingrese una opcion correcta")
 
     def CrearPin():
-        Pin = int(input("Cree su pin de 4 dijitos").strip())
+        Pin = input("Cree su pin de 4 dijitos").strip()
         while True:
             if len(Pin) == 4:
                 print("Pin valido")
@@ -137,10 +157,12 @@ def Menu():
     print("1 = Crear Curso")
     print("2 = Ingresar Alumno")
     print("3 = Ingresar profesor")
-    print("5 = Crear Tarea")
+    print("4 = Crear Tarea")
+    print("5 = Inicio de sesion para profesores")
+    print("6 = Inicio de sesion para alumnos")
     while True:
         try:
-            opcion = int(input("Seleccione una opcion")).strip()
+            opcion = int(input("Seleccione una opcion").strip())
         except ValueError: 
             print("Ingrese una opcion valida")
         else: break
@@ -159,7 +181,6 @@ def Menu():
         print("Los estudiantes se asignaran de manera automatica")
         print("Seleccione el requisito para el para el profesor del curso")
         requisitos = Especialidades()
-        encontrado = None
         ListaProf2 = []
         for i in ListaProfesores:
             if i.Especialidad== requisitos:
@@ -177,11 +198,11 @@ def Menu():
         Nombre = input("Ingrese el nombre del estudiante").strip().title()
         Codigo = random.randint(1000000, 9999999)
         PinEstudiante = CrearPin()
+        print(Codigo)
 
         nuevoEst = Estudiante(Nombre, Codigo, PinEstudiante)
         ListaEstudiantes.append(nuevoEst)
         nuevoEst.MostrarInformacion()
-        
     elif opcion == 3:
         NombreProfesor = input("Ingrese el nombre del profesor").strip().title()
         Codigo = random.randint(1000000, 9999999)
@@ -197,6 +218,6 @@ def Menu():
         NombreTarea = input("Ingrese el titulo de la tarea")
         ExplicacionTarea = input("Redacte una explicacion de la tarea")
         ValorTarea = input("Ingrese el valor de la tarea")
-        NuevaTarea = Tareas(NombreTarea, ExplicacionTarea, ValorTarea)
+        NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
 Menu()
