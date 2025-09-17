@@ -170,133 +170,154 @@ def Menu():
                 break
             else: print("Pin invalido")
         return Pin
-    
-    print("Menu")
-    print("1 = Crear Curso")
-    print("2 = Ingresar Alumno")
-    print("3 = Ingresar profesor")
-    print("4 = Crear Tarea")
-    print("5 = Inicio de sesion para profesores")
-    print("6 = Inicio de sesion para alumnos")
-    opcion = TryCatch([1, 2, 3, 4, 5, 6])
+    while True:
+        print("Menu")
+        print("1 = Crear Curso")
+        print("2 = Ingresar Alumno")
+        print("3 = Ingresar profesor")
+        print("4 = Crear Tarea")
+        print("5 = Inicio de sesion para profesores")
+        print("6 = Inicio de sesion para alumnos")
+        opcion = TryCatch([1, 2, 3, 4, 5, 6])
 
-    if opcion == 1: 
-        def ElegirProfesor(Lista):
-            for i in Lista:
-                i.MostrarInformacion()
-                print()
-            eleccion = input("Escriba el código del profesor que desea incluír en este curso").strip()
-            for i in Lista:
-                if i.Codigo == eleccion:
-                    return i
+        if opcion == 1: 
+            def ElegirProfesor(Lista):
+                for i in Lista:
+                    i.MostrarInformacion()
+                    print()
+                eleccion = input("Escriba el código del profesor que desea incluír en este curso").strip()
+                for i in Lista:
+                    if i.Codigo == eleccion:
+                        return i
 
-        NombreCurso = input("Ingrese el nombre del curso").strip().title()
-        print("Los estudiantes se asignaran de manera automatica")
-        print("Seleccione el requisito para el para el profesor del curso")
-        requisitos = Especialidades()
-        ListaProf2 = []
-        for i in ListaProfesores:
-            if i.Especialidad == requisitos:
-                ListaProf2.append(i)
-        if len(ListaProf2) == 0:
-            print("No se encontraron profesores que cumplan con el requisito elija uno entre la lista total")
-            Profe = ElegirProfesor(ListaProfesores)
-        elif len(ListaProf2) >= 1:
-            print("Estos son los profesores que cuentan con el requisito necesario para el curso")
-            Profe = ElegirProfesor(ListaProf2)
-        Profe.cursos.append(NombreCurso)
-        NuevoCurso = Curso(NombreCurso, Profe)
-        NuevoCurso.actualizarCursos(ListaEstudiantes)
-        ListaCursos.append(NuevoCurso)    
-    elif opcion == 2:
-        Nombre = input("Ingrese el nombre del estudiante").strip().title()
-        Codigo = random.randint(1000000, 9999999)
-        PinEstudiante = CrearPin()
-        print(Codigo)
+            NombreCurso = input("Ingrese el nombre del curso").strip().title()
+            print("Los estudiantes se asignaran de manera automatica")
+            print("Seleccione el requisito para el para el profesor del curso")
+            requisitos = Especialidades()
+            ListaProf2 = []
+            for i in ListaProfesores:
+                if i.Especialidad == requisitos:
+                    ListaProf2.append(i)
+            if len(ListaProf2) == 0:
+                print("No se encontraron profesores que cumplan con el requisito elija uno entre la lista total")
+                Profe = ElegirProfesor(ListaProfesores)
+            elif len(ListaProf2) >= 1:
+                print("Estos son los profesores que cuentan con el requisito necesario para el curso")
+                Profe = ElegirProfesor(ListaProf2)
+            Profe.cursos.append(NombreCurso)
+            NuevoCurso = Curso(NombreCurso, Profe)
+            NuevoCurso.actualizarCursos(ListaEstudiantes)
+            ListaCursos.append(NuevoCurso)    
+        elif opcion == 2:
+            Nombre = input("Ingrese el nombre del estudiante").strip().title()
+            Codigo = random.randint(1000000, 9999999)
+            PinEstudiante = CrearPin()
+            print(Codigo)
 
-        nuevoEst = Estudiante(Nombre, Codigo, PinEstudiante)
-        ListaEstudiantes.append(nuevoEst)
-        nuevoEst.MostrarInformacion()
-    elif opcion == 3:
-        NombreProfesor = input("Ingrese el nombre del profesor").strip().title()
-        Codigo = random.randint(1000000, 9999999)
+            nuevoEst = Estudiante(Nombre, Codigo, PinEstudiante)
+            ListaEstudiantes.append(nuevoEst)
+            nuevoEst.MostrarInformacion()
+        elif opcion == 3:
+            NombreProfesor = input("Ingrese el nombre del profesor").strip().title()
+            Codigo = random.randint(1000000, 9999999)
 
-        print("Ingrese la especialidad del profesor")
-        EspecialidadProfesor = Especialidades()
+            print("Ingrese la especialidad del profesor")
+            EspecialidadProfesor = Especialidades()
 
-        NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
-        ListaProfesores.append(NuevoProf)
-        NuevoProf.MostrarInformacion()
-    elif opcion == 4:
-        NombreCursoTarea = input("seleccione el curso a asignar la tarea").strip().title()
-        NombreTarea = input("Ingrese el titulo de la tarea").strip().title()
-        ExplicacionTarea = input("Redacte una explicacion de la tarea").strip()
-        ValorTarea = float(input("Ingrese el valor de la tarea").strip())
-        NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
+            NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
+            ListaProfesores.append(NuevoProf)
+            NuevoProf.MostrarInformacion()
+        elif opcion == 4:
+            NombreCursoTarea = input("seleccione el curso a asignar la tarea").strip().title()
+            NombreTarea = input("Ingrese el titulo de la tarea").strip().title()
+            ExplicacionTarea = input("Redacte una explicacion de la tarea").strip()
+            ValorTarea = float(input("Ingrese el valor de la tarea").strip())
+            NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
-        for curso in ListaCursos:
-            if curso.Nombre == NombreCursoTarea:
-                curso.Tareas.append(NuevaTarea)
-                curso.PunteoActual += ValorTarea
-                for i in ListaEstudiantes:
-                    for curs in i.cursos:
-                        if curso.Nombre == curs:
-                            i.ListaTareas.append(NuevaTarea)
-                        else: pass
-                break
-    elif opcion == 5:
-        print("Inicie sesion")
-        UsuarioIniciado = IniciarSesion(ListaProfesores)
-        while True:
-            print("Seleccione la accion que desea realizar")
-            print("1 = Calificar Tareas")
-            print("2 = Ver informes")
-            print("3 = Salir")
-            accion = TryCatch([1, 2, 3])
-            if accion == 1:
-                for cursoUsuario in UsuarioIniciado.cursos:
+            for curso in ListaCursos:
+                if curso.Nombre == NombreCursoTarea:
+                    curso.Tareas.append(NuevaTarea)
+                    curso.PunteoActual += ValorTarea
+                    for est in curso.Estudiantes:
+                        est[2].append(NuevaTarea)      
+        elif opcion == 5:
+            print("Inicie sesion")
+            UsuarioIniciado = IniciarSesion(ListaProfesores)
+            while True:
+                print("Seleccione la accion que desea realizar")
+                print("1 = Calificar Tareas")
+                print("2 = Ver informes")
+                print("3 = Salir")
+                accion = TryCatch([1, 2, 3])
+                if accion == 1:
+                    for cursoUsuario in UsuarioIniciado.cursos:
+                        for curso in ListaCursos:
+                            if curso.Nombre == cursoUsuario:
+                                print(f"Curso: {curso.Nombre}")
+                                for est in curso.Estudiantes:
+                                    print(f"Estudiante: {est[0]}")
+                                    for tarea in est[2]:
+                                        if tarea == 0: print("No hay tareas")
+                                        elif tarea.Punteo is None:
+                                            tarea.VerTarea()
+                                            print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
+                                            nota = TryCatch(None)
+                                            tarea.AsignarPunteo(nota)
+                                            est[1] += nota
+                elif accion == 2:
+                    for i in UsuarioIniciado.cursos:
+                        for j in ListaCursos:
+                            if i == j.Nombre:
+                                j.Informes()
+                elif accion == 3: 
+                    print("Cerrando sesion")
+        elif opcion == 6:
+            print("Inicie sesion")
+            UsuarioIniciado = IniciarSesion(ListaEstudiantes)
+            while True:
+                print("Seleccione la accion que desea realizar")
+                print("1 = Realizar Tareas")
+                print("2 = Inscribirse a un nuevo curso")
+                print("3 = salir")
+                accion = TryCatch([1, 2, 3])
+
+                if accion == 1:
+                    for curso in UsuarioIniciado.cursos:
+                        for estudiante in curso.Estudiantes:
+                            if estudiante[0] == UsuarioIniciado.Nombre:
+                                for tarea in estudiante[2]:
+                                    if tarea.Contenido != None:
+                                        pass
+                                    elif tarea.Contenido == None:
+                                        tarea.CompletarTarea()
+                elif accion == 2:
                     for curso in ListaCursos:
-                        if curso == cursoUsuario:
-                            print(f"Curso: {curso.Nombre}")
-                            for est in curso.Estudiantes:
-                             # est = [Nombre del estudiante, Punteo, [Tareas]]
-                                print(f"Estudiante: {est[0]}")
-                                for tarea in est[2]:
-                                    if tarea == 0: print("No hay tareas")
-                                    elif tarea.Punteo is None:
-                                        tarea.VerTarea()
-                                        print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
-                                        nota = TryCatch(None)
-                                        tarea.AsignarPunteo(nota)
-                                        est[1] += nota
-            elif accion == 2:
-                for i in UsuarioIniciado.cursos:
-                    for j in ListaCursos:
-                        if i == j.Nombre:
-                            j.Informes()
-            elif accion == 3: 
-                print("Cerrando sesion")
-    elif opcion == 6:
-        print("Inicie sesion")
-        UsuarioIniciado = IniciarSesion(ListaEstudiantes)
-        while True:
-            print("Seleccione la accion que desea realizar")
-            print("1 = Realizar Tareas")
-            print("2 = Inscribirse a un nuevo curso")
-            print("3 = salir")
-            accion = TryCatch([1, 2, 3])
+                        encontrado = False
+                        for j in UsuarioIniciado.cursos:
+                            if  j == curso.Nombre:
+                                encontrado = True
+                            else: pass
+                        if encontrado == False:
+                            print(f"Desea añadirse a este curso?: {curso.Nombre}")
+                            print("1 = si")
+                            print("2 = no")
+                            opcion = TryCatch([1, 2])
+                            if opcion == 1:
+                                curso.Estudiantes.append([UsuarioIniciado.Nombre, 0, []])
+                                UsuarioIniciado.cursos.append(curso.Nombre)
+                            elif opcion == 2: pass
+                        elif encontrado == True: pass
+                elif accion == 3:
+                    print("Cerrando sesion")
+        elif opcion == 7: 
+            print("Seguro que desea terminar la ejecucion?")
+            print("1 = si")
+            print("2 = no")
+            salir = TryCatch([1, 2])
+            if salir == 1:
+                print("Gracias ppor utilizar este programa :)")
+                break
+            elif opcion == 2:
+                pass
 
-            if accion == 1:
-                for curso in UsuarioIniciado.cursos:
-                    for estudiante in curso.Estudiantes:
-                        if estudiante[0] == UsuarioIniciado.Nombre:
-                            for tarea in estudiante[2]:
-                                if tarea.Contenido != None:
-                                    pass
-                                elif tarea.Contenido == None:
-                                    tarea.CompletarTarea()
-            elif accion == 2:
-                print()
-            elif accion == 3:
-                print("Cerrando sesion")
 Menu()
