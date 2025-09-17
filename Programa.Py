@@ -98,17 +98,16 @@ def TryCatch(listaOpciones):
         else: break
     return opcion
 
-
 def IniciarSesion(lista):
     Validez = False
     usuario = None
     while True:
-        IniciarNombre = input("Ingrese su Nombre").strip().title()
+        IniciarNombre = input("Ingrese su Nombre ").strip().title()
         while True:
             for i in lista:
                 if i.Nombre == IniciarNombre:
                     while True:
-                        IniciarContraseña = input("Ingrese su pin").strip()
+                        IniciarContraseña = input("Ingrese su pin ").strip()
                         Validez = i.ValidarPin(IniciarContraseña)
                         if Validez == True:
                             usuario = i
@@ -163,13 +162,14 @@ def Menu():
                 print("Ingrese una opcion correcta")
 
     def CrearPin():
-        Pin = input("Cree su pin de 4 dijitos").strip()
         while True:
+            Pin = input("Cree su pin de 4 dijitos ").strip()
             if len(Pin) == 4:
                 print("Pin valido")
                 break
             else: print("Pin invalido")
         return Pin
+
     while True:
         print("Menu")
         print("1 = Crear Curso")
@@ -178,19 +178,20 @@ def Menu():
         print("4 = Crear Tarea")
         print("5 = Inicio de sesion para profesores")
         print("6 = Inicio de sesion para alumnos")
-        opcion = TryCatch([1, 2, 3, 4, 5, 6])
+        print("7 = Salir")
+        opcion = TryCatch([1, 2, 3, 4, 5, 6, 7])
 
         if opcion == 1: 
             def ElegirProfesor(Lista):
                 for i in Lista:
                     i.MostrarInformacion()
                     print()
-                eleccion = input("Escriba el código del profesor que desea incluír en este curso").strip()
+                eleccion = input("Escriba el código del profesor que desea incluír en este curso ").strip()
                 for i in Lista:
                     if i.Codigo == eleccion:
                         return i
 
-            NombreCurso = input("Ingrese el nombre del curso").strip().title()
+            NombreCurso = input("Ingrese el nombre del curso ").strip().title()
             print("Los estudiantes se asignaran de manera automatica")
             print("Seleccione el requisito para el para el profesor del curso")
             requisitos = Especialidades()
@@ -209,7 +210,7 @@ def Menu():
             NuevoCurso.actualizarCursos(ListaEstudiantes)
             ListaCursos.append(NuevoCurso)    
         elif opcion == 2:
-            Nombre = input("Ingrese el nombre del estudiante").strip().title()
+            Nombre = input("Ingrese el nombre del estudiante ").strip().title()
             Codigo = random.randint(1000000, 9999999)
             PinEstudiante = CrearPin()
             print(Codigo)
@@ -218,7 +219,7 @@ def Menu():
             ListaEstudiantes.append(nuevoEst)
             nuevoEst.MostrarInformacion()
         elif opcion == 3:
-            NombreProfesor = input("Ingrese el nombre del profesor").strip().title()
+            NombreProfesor = input("Ingrese el nombre del profesor ").strip().title()
             Codigo = random.randint(1000000, 9999999)
 
             print("Ingrese la especialidad del profesor")
@@ -228,10 +229,10 @@ def Menu():
             ListaProfesores.append(NuevoProf)
             NuevoProf.MostrarInformacion()
         elif opcion == 4:
-            NombreCursoTarea = input("seleccione el curso a asignar la tarea").strip().title()
-            NombreTarea = input("Ingrese el titulo de la tarea").strip().title()
-            ExplicacionTarea = input("Redacte una explicacion de la tarea").strip()
-            ValorTarea = float(input("Ingrese el valor de la tarea").strip())
+            NombreCursoTarea = input("seleccione el curso a asignar la tarea ").strip().title()
+            NombreTarea = input("Ingrese el titulo de la tarea ").strip().title()
+            ExplicacionTarea = input("Redacte una explicacion de la tarea ").strip()
+            ValorTarea = float(input("Ingrese el valor de la tarea ").strip())
             NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
             for curso in ListaCursos:
@@ -257,13 +258,13 @@ def Menu():
                                 for est in curso.Estudiantes:
                                     print(f"Estudiante: {est[0]}")
                                     for tarea in est[2]:
-                                        if tarea == 0: print("No hay tareas")
+                                        if tarea.Punteo is None: print("No hay tareas")
                                         elif tarea.Punteo is None:
                                             tarea.VerTarea()
                                             print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
                                             nota = TryCatch(None)
                                             tarea.AsignarPunteo(nota)
-                                            est[1] += nota
+                                            est[1] += tarea.Punteo
                 elif accion == 2:
                     for i in UsuarioIniciado.cursos:
                         for j in ListaCursos:
@@ -282,13 +283,11 @@ def Menu():
                 accion = TryCatch([1, 2, 3])
 
                 if accion == 1:
-                    for curso in UsuarioIniciado.cursos:
+                    for curso in ListaCursos:
                         for estudiante in curso.Estudiantes:
                             if estudiante[0] == UsuarioIniciado.Nombre:
                                 for tarea in estudiante[2]:
-                                    if tarea.Contenido != None:
-                                        pass
-                                    elif tarea.Contenido == None:
+                                    if tarea.Contenido is None:
                                         tarea.CompletarTarea()
                 elif accion == 2:
                     for curso in ListaCursos:
@@ -321,3 +320,5 @@ def Menu():
                 pass
 
 Menu()
+
+# est[1] += nota
