@@ -37,12 +37,29 @@ class Curso:
         self.Profesor = Profesor
         self.Estudiantes = [] # [[Nombre del estudiante, Punteo, [Tareas]]
         self.Tareas = []
+        self.PunteoActual = 0
     def actualizarCursos(self, lista):
         for est in lista:
             cursos_est = [c[0] for c in est.cursos]
             if self.Nombre not in cursos_est:
                 self.Estudiantes.append([est.Nombre, 0, []])
                 est.cursos.append([self.Nombre, 0, []])
+    def Informes(self):
+        Rendimiento = []
+        for est in self.Estudiantes:
+            if est[1] < 0.55 * self.PunteoActual:
+                Rendimiento.append(est)
+        print("Estudiantes de bajo rendimiento")
+        for i in Rendimiento:
+            print(f"Nombre: {i[0]} - Punteo: {i[1]}/{self.PunteoActual}")
+        Rendimiento.clear()
+        for est in self.Estudiantes:
+            if est[1] > 0.80 * self.PunteoActual:
+                Rendimiento.append(est)
+        print("Estudiantes de alto rendimiento")
+        for i in Rendimiento:
+            print(f"Nombre: {i[0]} - Punteo: {i[1]}/{self.PunteoActual}")
+
 class Tareas:
     def __init__(self, CursoA, Nombre, explicacion, Valor):
         self.CursoA = CursoA
@@ -52,7 +69,7 @@ class Tareas:
         self.Punteo = None 
         self.Contenido = None
     def AsignarPunteo(self, nota):
-        self.Punteo = self.Valor * nota
+        self.Punteo = self.Valor * (nota/100)
     def CompletarTarea(self):
         print("Cumpla las instrucciones de la tarea")
         print(self.Explicacion)
@@ -68,6 +85,19 @@ class Tareas:
 ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
+
+def TryCatch(listaOpciones):
+    while True:
+        try:
+            opcion = int(input().strip())
+        except ValueError:
+            print("Ingrese un valor valido")
+        if not listaOpciones: break
+        elif opcion not in listaOpciones:
+            print("Ingrese un valor valido")
+        else: break
+    return opcion
+
 
 def IniciarSesion(lista):
     Validez = False
@@ -101,12 +131,7 @@ def Menu():
             print("2 = Kiche")
             print("3 = Ingles")
             print("4 = Aleman")
-            while True:
-                try:
-                    OpcionLengua = int(input().strip())
-                except ValueError:
-                    print("ingrese una opcion valida")
-                else: break
+            OpcionLengua = TryCatch([1, 2, 3, 4])
             if OpcionLengua == 1: return "Lenguaje Español"
             elif OpcionLengua == 2: return "Lenguaje Kiche"
             elif OpcionLengua == 3: return "Lenguaje Ingles"
@@ -124,12 +149,8 @@ def Menu():
                 print(f"numero: {i}, Especialidad: Lengua")
             else:
                 print(f"numero: {i}, Especialidad: {j}")
-        while True:
-            try:
-                OpcionEspecialidad = int(input("Ingrese una opcion").strip())
-            except ValueError:
-                print("Ingrese una opcion valida")
-            else: break
+        
+        OpcionEspecialidad = TryCatch(None)
         OpcionEspecialidad= str(OpcionEspecialidad)
         
         if OpcionEspecialidad == "4":
@@ -157,12 +178,7 @@ def Menu():
     print("4 = Crear Tarea")
     print("5 = Inicio de sesion para profesores")
     print("6 = Inicio de sesion para alumnos")
-    while True:
-        try:
-            opcion = int(input("Seleccione una opcion").strip())
-        except ValueError: 
-            print("Ingrese una opcion valida")
-        else: break
+    opcion = TryCatch([1, 2, 3, 4, 5, 6])
 
     if opcion == 1: 
         def ElegirProfesor(Lista):
@@ -180,7 +196,7 @@ def Menu():
         requisitos = Especialidades()
         ListaProf2 = []
         for i in ListaProfesores:
-            if i.Especialidad== requisitos:
+            if i.Especialidad == requisitos:
                 ListaProf2.append(i)
         if len(ListaProf2) == 0:
             print("No se encontraron profesores que cumplan con el requisito elija uno entre la lista total")
@@ -188,6 +204,7 @@ def Menu():
         elif len(ListaProf2) >= 1:
             print("Estos son los profesores que cuentan con el requisito necesario para el curso")
             Profe = ElegirProfesor(ListaProf2)
+        Profe.cursos.append(NombreCurso)
         NuevoCurso = Curso(NombreCurso, Profe)
         NuevoCurso.actualizarCursos(ListaEstudiantes)
         ListaCursos.append(NuevoCurso)    
@@ -220,6 +237,7 @@ def Menu():
         for curso in ListaCursos:
             if curso.Nombre == NombreCursoTarea:
                 curso.Tareas.append(NuevaTarea)
+                curso.PunteoActual += ValorTarea
                 for i in ListaEstudiantes:
                     for curs in i.cursos:
                         if curso.Nombre == curs:
@@ -233,12 +251,8 @@ def Menu():
             print("Seleccione la accion que desea realizar")
             print("1 = Calificar Tareas")
             print("2 = Ver informes")
-            while True:
-                try:
-                    accion = int(input().strip())
-                except ValueError:
-                    print("Ingrese una opcion valida")
-                else: break
+            print("3 = Salir")
+            accion = TryCatch([1, 2, 3])
             if accion == 1:
                 for cursoUsuario in UsuarioIniciado.cursos:
                     for curso in ListaCursos:
@@ -252,16 +266,16 @@ def Menu():
                                     elif tarea.Punteo is None:
                                         tarea.VerTarea()
                                         print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
-                                        while True: 
-                                            try: 
-                                                nota = int(input().strip())
-                                            except ValueError:
-                                                print("Ingrese una calificaion valida")
-                                            else: break
+                                        nota = TryCatch(None)
                                         tarea.AsignarPunteo(nota)
                                         est[1] += nota
             elif accion == 2:
-                print()
+                for i in UsuarioIniciado.cursos:
+                    for j in ListaCursos:
+                        if i == j.Nombre:
+                            j.Informes()
+            elif accion == 3: 
+                print("Cerrando sesion")
     elif opcion == 6:
         print("Inicie sesion")
         UsuarioIniciado = IniciarSesion(ListaEstudiantes)
@@ -269,11 +283,20 @@ def Menu():
             print("Seleccione la accion que desea realizar")
             print("1 = Realizar Tareas")
             print("2 = Inscribirse a un nuevo curso")
-            while True:
-                try:
-                    accion = int(input().strip())
-                except ValueError:
-                    print("Ingrese una opcion valida")
-                else: break
+            print("3 = salir")
+            accion = TryCatch([1, 2, 3])
 
+            if accion == 1:
+                for curso in UsuarioIniciado.cursos:
+                    for estudiante in curso.Estudiantes:
+                        if estudiante[0] == UsuarioIniciado.Nombre:
+                            for tarea in estudiante[2]:
+                                if tarea.Contenido != None:
+                                    pass
+                                elif tarea.Contenido == None:
+                                    tarea.CompletarTarea()
+            elif accion == 2:
+                print()
+            elif accion == 3:
+                print("Cerrando sesion")
 Menu()
