@@ -221,16 +221,17 @@ def Menu():
             ListaCursos.append(NuevoCurso)
             print(f"El curso: {NombreCurso} fue creado con exito")  
         elif opcion == 2:
-            Nombre = input("Ingrese el nombre del estudiante ").strip().title()
+            Nombre = input("Ingrese el nombre del estudiante: ").strip().title()
             Codigo = random.randint(1000000, 9999999)
             PinEstudiante = CrearPin()
             print(Codigo)
 
             nuevoEst = Estudiante(Nombre, Codigo, PinEstudiante)
             ListaEstudiantes.append(nuevoEst)
+            print("Estudiante registrado con exito")
             nuevoEst.MostrarInformacion()
         elif opcion == 3:
-            NombreProfesor = input("Ingrese el nombre del profesor ").strip().title()
+            NombreProfesor = input("Ingrese el nombre del profesor: ").strip().title()
             Codigo = random.randint(1000000, 9999999)
             Pin = CrearPin()
 
@@ -239,20 +240,27 @@ def Menu():
 
             NuevoProf = Profesor(NombreProfesor, Codigo, Pin, EspecialidadProfesor)
             ListaProfesores.append(NuevoProf)
+            print("Profesor registrado con exito")
             NuevoProf.MostrarInformacion()
         elif opcion == 4:
-            NombreCursoTarea = input("seleccione el curso a asignar la tarea ").strip().title()
-            NombreTarea = input("Ingrese el titulo de la tarea ").strip().title()
-            ExplicacionTarea = input("Redacte una explicacion de la tarea ").strip()
-            ValorTarea = float(input("Ingrese el valor de la tarea ").strip())
+            NombreCursoTarea = input("seleccione el curso a asignar la tarea: ").strip().title()
+            for c in ListaCursos:
+                if c.Nombre == NombreTarea:
+                    curso = c
+                else: curso = None
+            if curso is None:
+                print("Curso no encontrado.")
+                continue
+            NombreTarea = input("Ingrese el titulo de la tarea: ").strip().title()
+            ExplicacionTarea = input("Redacte una explicacion de la tarea: ").strip()
+            ValorTarea = float(input("Ingrese el valor de la tarea: ").strip())
             NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
-            for curso in ListaCursos:
-                if curso.Nombre == NombreCursoTarea:
-                    curso.Tareas.append(NuevaTarea)
-                    curso.PunteoActual += ValorTarea
-                    for est in curso.Estudiantes:
-                        est[2].append(NuevaTarea)      
+            curso.Tareas.append(tarea)
+            curso.PunteoActual += ValorTarea
+            for est in curso.Estudiantes:
+                est[2].append(tarea)
+            print("Tarea creada y asignada a los estudiantes.")
         elif opcion == 5:
             print("Inicie sesion")
             UsuarioIniciado = IniciarSesion(ListaProfesores)
