@@ -87,6 +87,32 @@ class Tareas:
         print(f"Entrega: {self.Contenido}")
         print(f"Punteo: {self.Punteo}")
 
+class Evaluacion:
+    def __init__(self, Nombre, valor):
+        self.Nombre = Nombre
+        self.Nota = 0
+        self.Valor = valor
+        self.preguntas = []
+    def IngresarPreguntas(self):
+        while True:
+            pregunta = input("Ingrese una pregunta: ").strip()
+            self.preguntas.append([pregunta, None])
+            print("Desea ingresar otra pregunta? (1 = si, 2 = no): ")
+            Salir = TryCatch([1, 2])
+            if Salir == "1":
+                continue
+            elif Salir == "2":
+                break    
+    def RendirExamen(self):
+        for pregunta in self.preguntas:
+            print(f"Pregunta: {pregunta[0]}")
+            pregunta[1] = input("ingrese su prepuesta").strip()
+    def VerResolucion(self):
+        for pregunta in self.preguntas:
+            print(f"Pregunta: {pregunta[0]}")
+            print(f"Respuesta: {pregunta[1]}")
+        self.Nota = float(input("Que calificacion le da a esta evaluacion sobre el 100% del punteo?: ").strip())
+
 ListaProfesores = []
 ListaEstudiantes = []
 ListaCursos = []
@@ -106,6 +132,7 @@ def TryCatch(listaOpciones):
         return opcion
 
 def IniciarSesion(lista):
+    Validez = False
     while True:
         IniciarNombre = input("Ingrese su Nombre ").strip().title()
         for i in lista:
@@ -208,7 +235,7 @@ def Menu():
                 for p in candidatos:
                     if str(p.Codigo) == codigo:
                         Profe = p
-                    else: Profe = None
+                        break
                 if Profe is None:
                     print("Ingrese un codigo valido")
                 elif Profe != None:
@@ -244,10 +271,10 @@ def Menu():
             NuevoProf.MostrarInformacion()
         elif opcion == 4:
             NombreCursoTarea = input("seleccione el curso a asignar la tarea: ").strip().title()
+            curso = None
             for c in ListaCursos:
-                if c.Nombre == NombreTarea:
+                if c.Nombre == NombreCursoTarea:
                     curso = c
-                else: curso = None
             if curso is None:
                 print("Curso no encontrado.")
                 continue
@@ -256,10 +283,10 @@ def Menu():
             ValorTarea = float(input("Ingrese el valor de la tarea: ").strip())
             NuevaTarea = Tareas(NombreCursoTarea, NombreTarea, ExplicacionTarea, ValorTarea)
 
-            curso.Tareas.append(tarea)
+            curso.Tareas.append(NuevaTarea)
             curso.PunteoActual += ValorTarea
             for est in curso.Estudiantes:
-                est[2].append(tarea)
+                est[2].append(NuevaTarea)
             print("Tarea creada y asignada a los estudiantes.")
         elif opcion == 5:
             print("Inicie sesion")
@@ -268,30 +295,39 @@ def Menu():
                 print("Seleccione la accion que desea realizar")
                 print("1 = Calificar Tareas")
                 print("2 = Ver informes")
-                print("3 = Salir")
-                accion = TryCatch([1, 2, 3])
+                print("3 = Asignar evaluacion")
+                print("4 = Salir")
+                accion = TryCatch([1, 2, 3, 4])
                 if accion == 1:
-                    for cursoUsuario in UsuarioIniciado.cursos:
-                        for curso in ListaCursos:
-                            if curso.Nombre == cursoUsuario:
-                                print(f"Curso: {curso.Nombre}")
-                                for est in curso.Estudiantes:
-                                    print(f"Estudiante: {est[0]}")
-                                    for tarea in est[2]:
-                                        if tarea.Punteo is None: print("No hay tareas")
-                                        elif tarea.Punteo is None:
-                                            tarea.VerTarea()
-                                            print("Asigne un punteo a la tarea sobre el 100% de la calificaion")
-                                            nota = TryCatch(None)
-                                            tarea.AsignarPunteo(nota)
-                                            est[1] += tarea.Punteo
+                    for curso in ListaCursos:
+                        if curso.Nombre in UsuarioIniciado.cursos:
+                            print(f"Curso: {curso.Nombre}")
+                            for est in curso.Estudiantes:
+                                print(f"Estudiante: {est[0]}")
+                                for tarea in est[2]:
+                                    if tarea.Punteo is None:
+                                        tarea.VerTarea()
+                                        print("Nota (0-100):")
+                                        nota = TryCatch(None)
+                                        tarea.AsignarPunteo(nota)
+                                        est[1] += tarea.Punteo
                 elif accion == 2:
-                    for i in UsuarioIniciado.cursos:
-                        for j in ListaCursos:
-                            if i == j.Nombre:
-                                j.Informes()
-                elif accion == 3: 
+                    for curso in ListaCursos:
+                        if curso.Nombre in UsuarioIniciado.cursos:
+                            curso.Informes()
+                elif accion == 3:
+                    paraCurso = input("Ingrese el curso para el que asignara la Evaluacion: ").strip().title()
+                    if paraCurso in UsuarioIniciado.cursos:
+                        nombreEvaluacion = input("Ingrese el nombre de la evaluacion: ")
+                        valorevaluacion = input("Ingrese el valor de la evaluacion: ")
+
+                        NuevaEvaluacion = Evaluacion(nombreEvaluacion, valorevaluacion)
+                        NuevaEvaluacion.IngresarPreguntas()
+                        for curso in ListaCursos:
+                            print()
+                elif accion == 4: 
                     print("Cerrando sesion")
+                    break
         elif opcion == 6:
             print("Inicie sesion")
             UsuarioIniciado = IniciarSesion(ListaEstudiantes)
@@ -311,23 +347,18 @@ def Menu():
                                         tarea.CompletarTarea()
                 elif accion == 2:
                     for curso in ListaCursos:
-                        encontrado = False
-                        for j in UsuarioIniciado.cursos:
-                            if  j == curso.Nombre:
-                                encontrado = True
-                            else: pass
-                        if encontrado == False:
+                        if curso.Nombre not in UsuarioIniciado.cursos:
                             print(f"Desea añadirse a este curso?: {curso.Nombre}")
                             print("1 = si")
                             print("2 = no")
-                            opcion = TryCatch([1, 2])
-                            if opcion == 1:
+                            añadir = TryCatch([1, 2])
+                            if añadir == 1:
                                 curso.Estudiantes.append([UsuarioIniciado.Nombre, 0, []])
                                 UsuarioIniciado.cursos.append(curso.Nombre)
-                            elif opcion == 2: pass
-                        elif encontrado == True: pass
+                                print(f"{UsuarioIniciado.Nombre} inscrito en {curso.Nombre}")
                 elif accion == 3:
                     print("Cerrando sesion")
+                    break
         elif opcion == 7: 
             print("Seguro que desea terminar la ejecucion?")
             print("1 = si")
@@ -337,7 +368,7 @@ def Menu():
                 print("Gracias ppor utilizar este programa :)")
                 break
             elif opcion == 2:
-                pass
+                continue
 
 Menu()
 
