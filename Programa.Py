@@ -187,33 +187,39 @@ def Menu():
                 print("No hay Profesores cree uno primero")
                 continue
 
-            def ElegirProfesor(Lista):
-                for i in Lista:
-                    i.MostrarInformacion()
-                    print()
-                eleccion = input("Escriba el código del profesor que desea incluír en este curso ").strip()
-                for i in Lista:
-                    if i.Codigo == eleccion:
-                        return i
-
             NombreCurso = input("Ingrese el nombre del curso ").strip().title()
             print("Los estudiantes se asignaran de manera automatica")
             print("Seleccione el requisito para el para el profesor del curso")
             requisitos = Especialidades()
-            ListaProf2 = []
-            for i in ListaProfesores:
-                if i.Especialidad == requisitos:
-                    ListaProf2.append(i)
-            if len(ListaProf2) == 0:
-                print("No se encontraron profesores que cumplan con el requisito elija uno entre la lista total")
-                Profe = ElegirProfesor(ListaProfesores)
-            elif len(ListaProf2) >= 1:
-                print("Estos son los profesores que cuentan con el requisito necesario para el curso")
-                Profe = ElegirProfesor(ListaProf2)
+
+            candidatos = []
+            for p in ListaProfesores:
+                if p.Especialidad == requisitos:
+                    candidatos.append(p)
+            if not candidatos:
+                print("No hay profesores con esa especialidad. Mostrando todos:")
+                candidatos = ListaProfesores
+            for p in candidatos:
+                p.MostrarInformacion()
+            while True:
+                print("Ingrese el codigo del profesor seleccionado")
+                codigo = TryCatch(None)
+
+                for p in candidatos:
+                    if str(p.Codigo) == codigo:
+                        Profe = p
+                    else: Profe = None
+                if Profe is None:
+                    print("Ingrese un codigo valido")
+                elif Profe != None:
+                    print("Profesor seleccionado con exito")
+                    break
+            
             Profe.cursos.append(NombreCurso)
             NuevoCurso = Curso(NombreCurso, Profe)
             NuevoCurso.actualizarCursos(ListaEstudiantes)
-            ListaCursos.append(NuevoCurso)    
+            ListaCursos.append(NuevoCurso)
+            print(f"El curso: {NombreCurso} fue creado con exito")  
         elif opcion == 2:
             Nombre = input("Ingrese el nombre del estudiante ").strip().title()
             Codigo = random.randint(1000000, 9999999)
