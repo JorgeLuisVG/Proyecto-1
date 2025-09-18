@@ -1,0 +1,252 @@
+Clase Usuario:
+    Atributos:
+        Nombre
+        Codigo
+        cursos (lista)
+        Pin (privado)
+
+    Método Constructor(Nombre, Codigo, Pin):
+        asignar Nombre
+        asignar Codigo
+        cursos ← lista vacía
+        Pin ← valor recibido
+
+    Método MostrarInformacion():
+        Imprimir Nombre y Codigo
+        Para cada curso en cursos:
+            Imprimir curso
+
+    Método ValidarPin(ProbarPin):
+        Si ProbarPin == Pin:
+            retornar VERDADERO
+        Sino:
+            retornar FALSO
+
+
+Clase Estudiante extiende Usuario:
+    Atributos:
+        ListaTareas (lista)
+
+    Constructor(Nombre, Codigo, Pin):
+        Llamar constructor de Usuario
+        ListaTareas ← lista vacía
+
+    Método MostrarInformacion():
+        Llamar MostrarInformacion() de Usuario
+
+    Método ValidarPin(ProbarPin):
+        retornar ValidarPin del padre
+
+
+Clase Profesor extiende Usuario:
+    Atributos:
+        Especialidad
+
+    Constructor(Nombre, Codigo, Pin, Especialidad):
+        Llamar constructor de Usuario
+        Especialidad ← valor recibido
+
+    Método MostrarInformacion():
+        Llamar MostrarInformacion() de Usuario
+        Imprimir Especialidad
+
+    Método ValidarPin(ProbarPin):
+        retornar ValidarPin del padre
+
+
+
+Clase Curso:
+    Atributos:
+        Nombre
+        Profesor
+        Estudiantes (lista con [Nombre, Punteo, Tareas, Evaluaciones])
+        Tareas (lista)
+        PunteoActual
+
+    Constructor(Nombre, Profesor):
+        asignar Nombre y Profesor
+        Estudiantes ← []
+        Tareas ← []
+        PunteoActual ← 0
+
+    Método actualizarCursos(listaDeEstudiantes):
+        Para cada estudiante en listaDeEstudiantes:
+            Si curso no está en sus cursos:
+                añadir estudiante a Estudiantes
+                añadir curso a estudiante.cursos
+
+    Método Informes():
+        Si PunteoActual == 0:
+            Imprimir "No hay tareas todavía"
+            retornar
+
+        RendimientoBajo ← []
+        Para cada estudiante en Estudiantes:
+            Si estudiante.Punteo < 55% de PunteoActual:
+                añadir estudiante a RendimientoBajo
+
+        Imprimir "Estudiantes de bajo rendimiento"
+        Mostrar cada estudiante de RendimientoBajo
+
+        RendimientoAlto ← []
+        Para cada estudiante en Estudiantes:
+            Si estudiante.Punteo > 80% de PunteoActual:
+                añadir estudiante a RendimientoAlto
+
+        Imprimir "Estudiantes de alto rendimiento"
+        Mostrar cada estudiante de RendimientoAlto
+
+
+Clase Tarea:
+    Atributos:
+        CursoA
+        Nombre
+        Explicacion
+        Valor
+        Punteo
+        Contenido
+
+    Constructor(CursoA, Nombre, Explicacion, Valor):
+        Asignar atributos
+        Punteo ← NULO
+        Contenido ← NULO
+
+    Método AsignarPunteo(nota):
+        Punteo ← Valor * (nota/100)
+
+    Método CompletarTarea():
+        Mostrar Explicacion
+        Solicitar entrada del estudiante
+        Contenido ← entrada
+
+    Método VerTarea():
+        Mostrar datos de la tarea
+
+
+Clase Evaluacion:
+    Atributos:
+        Nombre
+        Nota
+        Valor
+        preguntas (lista de [pregunta, respuesta])
+        Resuelto
+
+    Constructor(Nombre, Valor):
+        Asignar atributos
+        Nota ← NULO
+        preguntas ← []
+        Resuelto ← FALSO
+
+    Método IngresarPreguntas():
+        Repetir:
+            Solicitar pregunta
+            Guardar en lista con respuesta NULA
+            Preguntar si desea continuar (1 = Sí, 2 = No)
+            Si respuesta = 2 → salir
+
+    Método RendirExamen():
+        Para cada pregunta en preguntas:
+            Mostrar pregunta
+            Guardar respuesta del estudiante
+        Resuelto ← VERDADERO
+
+    Método VerResolucion():
+        Mostrar preguntas y respuestas
+        Pedir calificación sobre 100%
+        Guardar en Nota
+
+
+Función TryCatch(listaOpciones):
+    Repetir:
+        Intentar leer entero
+        Si error → pedir de nuevo
+        Si listaOpciones == NULO → retornar número
+        Si número en listaOpciones → retornar número
+        Sino pedir nuevamente
+
+
+Función IniciarSesion(lista):
+    Repetir:
+        Pedir Nombre
+        Buscar usuario en lista
+        Si existe:
+            Pedir Pin hasta que coincida
+            Retornar usuario
+        Sino:
+            Mostrar "Usuario no encontrado"
+
+
+Función CrearPin():
+    Repetir:
+        Pedir pin
+        Si longitud == 4 → retornar
+        Sino mostrar error
+
+
+Función Especialidades():
+    Mostrar lista de especialidades
+    Si elige "Lengua":
+        Pedir idioma específico
+    Retornar especialidad seleccionada
+
+
+Función Menu():
+    Repetir:
+        Mostrar opciones:
+            1. Crear Curso
+            2. Ingresar Alumno
+            3. Ingresar Profesor
+            4. Crear Tarea
+            5. Inicio de sesión Profesor
+            6. Inicio de sesión Alumno
+            7. Salir
+
+        Leer opción
+
+        Caso 1: Crear Curso
+            Verificar que existan profesores
+            Pedir nombre del curso
+            Seleccionar especialidad
+            Buscar profesor candidato
+            Crear curso y asignar a estudiantes
+            Guardar en lista de cursos
+
+        Caso 2: Ingresar Alumno
+            Pedir datos
+            Generar código aleatorio
+            Crear pin
+            Guardar en lista de estudiantes
+
+        Caso 3: Ingresar Profesor
+            Pedir datos
+            Generar código aleatorio
+            Crear pin
+            Seleccionar especialidad
+            Guardar en lista de profesores
+
+        Caso 4: Crear Tarea
+            Seleccionar curso
+            Pedir datos de la tarea
+            Crear tarea y asignar a estudiantes
+
+        Caso 5: Sesión Profesor
+            Iniciar sesión
+            Repetir:
+                1. Calificar tareas
+                2. Ver informes
+                3. Asignar evaluación
+                4. Calificar evaluaciones
+                5. Salir
+
+        Caso 6: Sesión Alumno
+            Iniciar sesión
+            Repetir:
+                1. Realizar tareas
+                2. Inscribirse en curso
+                3. Rendir evaluaciones
+                4. Salir
+
+        Caso 7: Salir
+            Confirmar salida
+            Terminar programa
+
