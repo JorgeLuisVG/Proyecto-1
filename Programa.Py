@@ -12,7 +12,7 @@ class Usuario:
     def ValidarPin(self, ProbarPin):
         if ProbarPin == self.__Pin:
             return True
-        else: return False
+        
 
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Pin):
@@ -136,17 +136,17 @@ def TryCatch(listaOpciones):
         return opcion
 
 def IniciarSesion(lista):
-    usuario = None
     Validez = False
     while True:
         IniciarNombre = input("Ingrese su Nombre ").strip().title()
         for i in lista:
             if i.Nombre == IniciarNombre:
                 while True:
-                    IniciarContraseña = input("Ingrese su pin ").strip()
+                    IniciarContraseña = input("Ingrese su pin: ").strip()
                     Validez = i.ValidarPin(IniciarContraseña)
                     if Validez == True:
                         usuario = i
+                        break
                     else:
                         print("Pin incorrecto")
         if Validez == False: 
@@ -239,7 +239,7 @@ def Menu():
                 codigo = TryCatch(None)
 
                 for p in candidatos:
-                    if str(p.Codigo) == codigo:
+                    if p.Codigo == codigo:
                         Profe = p
                     break
                 if Profe is None:
