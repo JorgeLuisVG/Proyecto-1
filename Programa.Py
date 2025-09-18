@@ -13,6 +13,7 @@ class Usuario:
         if ProbarPin == self.__Pin:
             return True
         else: return False
+
 class Estudiante(Usuario):
     def __init__(self, Nombre, Codigo, Pin):
         super().__init__(Nombre, Codigo, Pin)
@@ -21,6 +22,7 @@ class Estudiante(Usuario):
         super().MostrarInformacion()
     def ValidarPin(self, ProbarPin):
         return super().ValidarPin(ProbarPin)
+    
 class Profesor(Usuario):
     def __init__(self, Nombre, Codigo, Pin, Especialidad):
         super().__init__(Nombre, Codigo, Pin)
@@ -38,13 +40,16 @@ class Curso:
         self.Estudiantes = [] # [[Nombre del estudiante, Punteo, [Tareas]]
         self.Tareas = []
         self.PunteoActual = 0
-    def actualizarCursos(self, lista):
-        for est in lista:
-            cursos_est = [c[0] for c in est.cursos]
-            if self.Nombre not in cursos_est:
+
+    def actualizarCursos(self, listaDeEstudiantes):
+        for est in listaDeEstudiantes:
+            if self.Nombre not in est.cursos:
                 self.Estudiantes.append([est.Nombre, 0, []])
-                est.cursos.append([self.Nombre, 0, []])
+                est.cursos.append(self.Nombre)
     def Informes(self):
+        if self.PunteoActual == 0:
+            print("No hay tareas en este curso todavía.")
+            return
         Rendimiento = []
         for est in self.Estudiantes:
             if est[1] < 0.55 * self.PunteoActual:
@@ -73,7 +78,7 @@ class Tareas:
     def CompletarTarea(self):
         print("Cumpla las instrucciones de la tarea")
         print(self.Explicacion)
-        archivo = input()
+        archivo = input("Ingrese su tarea: ")
         self.Contenido = archivo
     def VerTarea(self):
         print(f"Curso: {self.CursoA}")
@@ -92,84 +97,80 @@ def TryCatch(listaOpciones):
             opcion = int(input().strip())
         except ValueError:
             print("Ingrese un valor valido")
-        if not listaOpciones: break
+            continue
+        if listaOpciones is None: 
+            return opcion
         elif opcion not in listaOpciones:
             print("Ingrese un valor valido")
-        else: break
-    return opcion
+            continue
+        return opcion
 
 def IniciarSesion(lista):
-    Validez = False
-    usuario = None
     while True:
         IniciarNombre = input("Ingrese su Nombre ").strip().title()
-        while True:
-            for i in lista:
-                if i.Nombre == IniciarNombre:
-                    while True:
-                        IniciarContraseña = input("Ingrese su pin ").strip()
-                        Validez = i.ValidarPin(IniciarContraseña)
-                        if Validez == True:
-                            usuario = i
-                            break
-                        else:
-                            print("Pin incorrecto")
-            if Validez == False: 
-                print("No se encontró al usuario intentelo nuevamente")
-                break
-        if Validez == True: 
+        for i in lista:
+            if i.Nombre == IniciarNombre:
+                while True:
+                    IniciarContraseña = input("Ingrese su pin ").strip()
+                    Validez = i.ValidarPin(IniciarContraseña)
+                    if Validez == True:
+                        usuario = i
+                    else:
+                        print("Pin incorrecto")
+        if Validez == False: 
+            print("No se encontró al usuario intentelo nuevamente")
+        elif Validez == True: 
             print("Inicio de sesion Exitoso")
             break
     return usuario
 
-def Menu():
-    def Especialidades():
-        def Lengua():
-            print("Seleccione la Lengua")
-            print("1 = Español")
-            print("2 = Kiche")
-            print("3 = Ingles")
-            print("4 = Aleman")
-            OpcionLengua = TryCatch([1, 2, 3, 4])
-            if OpcionLengua == 1: return "Lenguaje Español"
-            elif OpcionLengua == 2: return "Lenguaje Kiche"
-            elif OpcionLengua == 3: return "Lenguaje Ingles"
-            elif OpcionLengua == 4: return "Lenguaje Aleman"
-        Especialidad = {
-            "1" : "Matematicas",
-            "2" : "Programacion",
-            "3" : "Ciencias",
-            "4" : Lengua,
-            "5" : "Filosofía",
-            "6" : "Actividad Fisica"
-        }
-        for i, j  in Especialidad.items():
-            if i == "4":
-                print(f"numero: {i}, Especialidad: Lengua")
-            else:
-                print(f"numero: {i}, Especialidad: {j}")
-        
-        OpcionEspecialidad = TryCatch(None)
-        OpcionEspecialidad= str(OpcionEspecialidad)
-        
-        if OpcionEspecialidad == "4":
-            n = Especialidad["4"]()
-            return n
+def CrearPin():
+    while True:
+        Pin = input("Cree su pin de 4 dijitos ").strip()
+        if len(Pin) == 4:
+            print("Pin valido")
+            break
+        else: print("Pin invalido")
+    return Pin
+
+def Especialidades():
+    def Lengua():
+        print("Seleccione la Lengua")
+        print("1 = Español")
+        print("2 = Kiche")
+        print("3 = Ingles")
+        print("4 = Aleman")
+        OpcionLengua = TryCatch([1, 2, 3, 4])
+        if OpcionLengua == 1: return "Lenguaje Español"
+        elif OpcionLengua == 2: return "Lenguaje Kiche"
+        elif OpcionLengua == 3: return "Lenguaje Ingles"
+        elif OpcionLengua == 4: return "Lenguaje Aleman"
+    Especialidad = {
+        "1" : "Matematicas",
+        "2" : "Programacion",
+        "3" : "Ciencias",
+        "4" : Lengua,
+        "5" : "Filosofía",
+        "6" : "Actividad Fisica"
+    }
+    for i, j  in Especialidad.items():
+        if i == "4":
+            print(f"numero: {i}, Especialidad: Lengua")
         else:
-            try:
-                return Especialidad[OpcionEspecialidad]
-            except KeyError:
-                print("Ingrese una opcion correcta")
+            print(f"numero: {i}, Especialidad: {j}")
+    
+    OpcionEspecialidad = str(TryCatch([1, 2, 3, 4, 5, 6]))
+    
+    if OpcionEspecialidad == "4":
+        n = Especialidad["4"]()
+        return n
+    else:
+        try:
+            return Especialidad[OpcionEspecialidad]
+        except KeyError:
+            print("Ingrese una opcion correcta")
 
-    def CrearPin():
-        while True:
-            Pin = input("Cree su pin de 4 dijitos ").strip()
-            if len(Pin) == 4:
-                print("Pin valido")
-                break
-            else: print("Pin invalido")
-        return Pin
-
+def Menu():
     while True:
         print("Menu")
         print("1 = Crear Curso")
@@ -182,6 +183,10 @@ def Menu():
         opcion = TryCatch([1, 2, 3, 4, 5, 6, 7])
 
         if opcion == 1: 
+            if not ListaProfesores: 
+                print("No hay Profesores cree uno primero")
+                continue
+
             def ElegirProfesor(Lista):
                 for i in Lista:
                     i.MostrarInformacion()
@@ -221,11 +226,12 @@ def Menu():
         elif opcion == 3:
             NombreProfesor = input("Ingrese el nombre del profesor ").strip().title()
             Codigo = random.randint(1000000, 9999999)
+            Pin = CrearPin()
 
             print("Ingrese la especialidad del profesor")
             EspecialidadProfesor = Especialidades()
 
-            NuevoProf = Profesor(NombreProfesor, Codigo, EspecialidadProfesor)
+            NuevoProf = Profesor(NombreProfesor, Codigo, Pin, EspecialidadProfesor)
             ListaProfesores.append(NuevoProf)
             NuevoProf.MostrarInformacion()
         elif opcion == 4:
